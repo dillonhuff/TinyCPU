@@ -1,3 +1,9 @@
+`define STAGE_INSTR_FETCH 0
+`define STAGE_MEMORY_READ 1
+`define STAGE_REGISTER_UPDATE 2
+`define STAGE_MEMORY_WRITE 3
+`define STAGE_PC_UPDATE 4
+
 module cpu(input clk,
            input rst
 
@@ -26,16 +32,22 @@ module cpu(input clk,
 
 `endif // DEBUG_ON
 
-   // NOTE: Need to add a stage counter?
-
    wire [2:0]       current_stage;
    
    counter #(.N(5)) stage_counter(.clk(clk),
                                   .rst(rst),
                                   .out(current_stage));
+
+   // Stage booleans
+   wire             is_stage_instr_fetch;
+   wire             is_stage_PC_update;
+
+   assign is_stage_instr_fetch = current_stage == `STAGE_INSTR_FETCH;
+   assign is_stage_PC_update = current_stage == `STAGE_PC_UPDATE;
    
    reg_async_reset #(.width(32)) issue_register(.clk(clk),
                                                 .rst(rst),
+                                                .en(is_stage_instr_fetch),
                                                 .D(read_data),
                                                 .Q(current_instruction));
 
@@ -48,6 +60,7 @@ module cpu(input clk,
    
    reg_async_reset #(.width(32)) PC(.clk(clk),
                                     .rst(rst),
+                                    .en(is_stage_PC_update),
                                     .D(PC_input),
                                     .Q(PC_output));
 

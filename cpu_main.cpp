@@ -141,24 +141,26 @@ void test_increment_program(const int argc, char** argv) {
   top->clk = 1;
   top->eval();
 
-  // Second instruction is load_immediate
-  cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
-  assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
+  // // Second instruction is load_immediate
+  // cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
+  // assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
 
-  top->clk = 0;
-  top->eval();
+  // top->clk = 0;
+  // top->eval();
 
-  top->clk = 1;
-  top->eval();
+  // top->clk = 1;
+  // top->eval();
 
-  // Third instruction is store
-  cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
-  assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_STORE);
+  // // Third instruction is store
+  // cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
+  // assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_STORE);
   
   int n_cycles = 100;
   for (int i = 0; i < n_cycles; i++) {
     top->clk = i % 2;
     top->eval();
+
+    cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
   }
 
   cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;

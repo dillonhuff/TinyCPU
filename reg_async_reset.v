@@ -1,5 +1,6 @@
 module reg_async_reset(input [width - 1:0] D,
                        output [width - 1:0] Q,
+                       input en,
                        input                clk,
                        input                rst);
 
@@ -11,7 +12,9 @@ module reg_async_reset(input [width - 1:0] D,
       if (!rst) begin
          Q_data <= 0;
       end else begin
-         Q_data <= D;
+         if (en) begin
+            Q_data <= D;
+         end
       end
    end
 
