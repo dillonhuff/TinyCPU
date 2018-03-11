@@ -13,13 +13,7 @@ void test_and_out(int argc, char** argv) {
 
   top->eval();
 
-  top->config_enable = 1;
-  top->config_data = 0;
-
-  top->eval();
-
-  top->config_enable = 0;
-
+  top->op_select = 1;
   top->in0 = 1;
   top->in1 = 0;
 
@@ -42,13 +36,8 @@ void test_or_out(int argc, char** argv) {
 
   top->eval();
 
-  top->config_enable = 1;
-  top->config_data = 1;
-
   top->eval();
 
-  top->config_enable = 0;
-  
   top->in0 = 1;
   top->in1 = 0;
 
@@ -72,13 +61,8 @@ void test_xor_out(int argc, char** argv) {
 
   top->eval();
 
-  top->config_enable = 1;
-  top->config_data = 2;
-
   top->eval();
 
-  top->config_enable = 0;
-  
   top->in0 = 1;
   top->in1 = 0;
 
