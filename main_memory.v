@@ -10,9 +10,9 @@ module main_memory(
                    
                    input         clk);
 
-   parameter mem_width = 2048;
+   parameter depth = 2048;
 
-   reg [31:0]                    mem[mem_width - 1 : 0];
+   reg [31:0]                    mem[depth - 1 : 0];
 
    always @(posedge clk) begin
 
