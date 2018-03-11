@@ -19,7 +19,7 @@ module cpu(input clk,
    wire [31:0] PC_output;
 
 `ifdef DEBUG_ON
-   assign PC_value = PC_input;
+   assign PC_value = PC_output;
    assign mem_read_data = read_data;
 `endif // DEBUG_ON
    
