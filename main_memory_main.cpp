@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "verilated.h"
 #include "Vmain_memory.h"
 
@@ -23,4 +25,6 @@ int main(int argc, char** argv) {
   top->eval();
 
   assert(top->read_data == 345);
+
+  cout << "$$$$ Main Memory" << endl;
 }
