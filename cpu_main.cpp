@@ -33,6 +33,11 @@ void set_instr_type(const instruction_type tp, uint32_t* instr) {
 uint32_t tiny_CPU_load_immediate(const int value, const int dest_reg) {
   uint32_t instr = 0;
   set_instr_type(TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE, &instr);
+
+  instr = instr | (value << 11);
+  instr = instr | (dest_reg << 6);
+
+  cout << "Load imm = " << bitset<32>(instr) << endl;
   return instr;
 }
 

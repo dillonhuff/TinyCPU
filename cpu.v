@@ -15,7 +15,6 @@ module cpu(input clk,
 `endif // DEBUG_ON
            );
 
-   wire [31:0] read_address;
    /* verilator lint_off UNUSED */
    wire [31:0] read_data;
    wire [31:0] write_address;
@@ -105,7 +104,14 @@ module cpu(input clk,
 
    main_memory_control main_mem_ctrl(
                                      // Inputs to select from
+                                     .stage(current_stage),
+                                     .PC_value(PC_output),
 
+                                     .memory_read_address(read_data_0),
+
+                                     .memory_write_data(read_data_0),
+                                     .memory_write_address(read_data_1),
+                                     
                                      // Outputs to send to main_memory
                                      .read_address(main_mem_raddr),
                                      .write_address(main_mem_waddr),
@@ -167,7 +173,6 @@ module cpu(input clk,
                           .clk(clk));
    
    // Dummy assigns
-   assign read_address = PC_output;
    assign write_address = 32'h0;
    assign write_data = 32'h0;
    assign write_enable = 1'h0;
