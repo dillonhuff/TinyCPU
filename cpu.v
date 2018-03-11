@@ -54,6 +54,20 @@ module cpu(input clk,
 
    wire [31:0] current_instruction;
    wire [4:0] current_instruction_type;
+
+   
+   wire [4:0] load_imm_reg;
+   wire [31:0] load_imm_data;
+   
+
+   wire [4:0]  load_mem_reg;
+   wire [31:0] load_mem_data;
+   
+
+   wire [4:0]  alu_op_reg_0;
+   wire [4:0] alu_op_reg_1;
+   wire [4:0] alu_op_reg_res;
+
    decoder instruction_decode(.instruction(current_instruction),
                               .instruction_type(current_instruction_type));
    
@@ -89,7 +103,22 @@ module cpu(input clk,
    
    wire        reg_file_write_en;
    
-   register_file_control reg_file_ctrl(.stage(current_stage),
+   register_file_control reg_file_ctrl(
+                                       // Control info
+                                       .stage(current_stage),
+                                       .current_instruction_type(current_instruction_type),
+
+                                       .load_imm_reg(load_imm_reg),
+                                       .load_imm_data(load_imm_data),
+
+                                       .load_mem_reg(load_mem_reg),
+                                       .load_mem_data(load_mem_data),
+
+                                       .alu_op_reg_0(alu_op_reg_0),
+                                       .alu_op_reg_1(alu_op_reg_1),
+                                       .alu_op_reg_res(alu_op_reg_res),
+
+                                       // Inputs to the register file
                                        .write_address(write_reg),
                                        .write_data(reg_file_write_data),
                                        .write_enable(reg_file_write_en),
