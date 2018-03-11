@@ -1,4 +1,11 @@
-module cpu(input clk);
+module cpu(input clk,
+           input rst
+
+           // Debug info probes
+`ifdef DEBUG_ON
+           , output [31:0] PC_value
+`endif
+           );
 
    wire [31:0] read_address;
    /* verilator lint_off UNUSED */
@@ -6,6 +13,21 @@ module cpu(input clk);
    wire [31:0] write_address;
    wire [31:0] write_data;
    wire write_enable;
+
+   wire [31:0] PC_input;
+   wire [31:0] PC_output;
+
+   // Dummy
+   assign PC_input = 32'h0;
+   assign PC_value = PC_output;
+   
+
+   reg_async_reset #(.width(32)) PC(.clk(clk),
+                                    .rst(rst),
+                                    .D(PC_input),
+                                    .Q(PC_output));
+   
+   
    
    main_memory #(.depth(1)) main_mem(.read_address(read_address),
                                      .read_data(read_data),
