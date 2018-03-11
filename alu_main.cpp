@@ -59,12 +59,9 @@ void test_xor_out(int argc, char** argv) {
   Verilated::commandArgs(argc, argv);
   Valu* top = new Valu;
 
-  top->eval();
-
-  top->eval();
-
   top->in0 = 1;
   top->in1 = 0;
+  top->op_select = 2;
 
   top->eval();
 
