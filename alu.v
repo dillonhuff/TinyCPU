@@ -14,7 +14,7 @@ module alu(input [31:0]  in0,
    
    assign out_or = in0 | in1;
    assign out_and = in0 & in1;
-   assign out_xor = in0 & in1;
+   assign out_xor = in0 ^ in1;
    assign out_add = in0 + in1;
    assign out_sub = in0 - in1;
    assign out_mul = in0 * in1;
