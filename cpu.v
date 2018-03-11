@@ -61,15 +61,25 @@ module cpu(input clk,
    
 
    wire [4:0]  load_mem_reg;
-   wire [31:0] load_mem_data;
-   
+   wire [4:0] load_mem_addr_reg;
 
    wire [4:0]  alu_op_reg_0;
    wire [4:0] alu_op_reg_1;
    wire [4:0] alu_op_reg_res;
 
    decoder instruction_decode(.instruction(current_instruction),
-                              .instruction_type(current_instruction_type));
+
+                              // Outputs
+                              .instruction_type(current_instruction_type),
+                              .load_imm_reg(load_imm_reg),
+                              .load_imm_data(load_imm_data),
+
+                              .load_mem_addr_reg(load_mem_addr_reg),
+                              .load_mem_reg(load_mem_reg),
+
+                              .alu_op_reg_0(alu_op_reg_0),
+                              .alu_op_reg_1(alu_op_reg_1),
+                              .alu_op_reg_res(alu_op_reg_res));
    
 
    // Program counter   
@@ -80,7 +90,11 @@ module cpu(input clk,
                                     .Q(PC_output));
 
    // Arithmetic logic unit
-   alu ALU(.in0(PC_output), .in1(32'h1), .op_select(3'h3), .out(PC_input));
+   wire [31:0] alu_result;
+
+   alu ALU(.in0(PC_output), .in1(32'h1), .op_select(3'h3), .out(alu_result));
+
+   assign PC_input = alu_result;
 
    // Main memory control
    main_memory #(.depth(2048)) main_mem(.read_address(read_address),
@@ -112,11 +126,12 @@ module cpu(input clk,
                                        .load_imm_data(load_imm_data),
 
                                        .load_mem_reg(load_mem_reg),
-                                       .load_mem_data(load_mem_data),
+                                       .load_mem_data(read_data),
 
                                        .alu_op_reg_0(alu_op_reg_0),
                                        .alu_op_reg_1(alu_op_reg_1),
                                        .alu_op_reg_res(alu_op_reg_res),
+                                       .alu_result(alu_result),
 
                                        // Inputs to the register file
                                        .write_address(write_reg),
