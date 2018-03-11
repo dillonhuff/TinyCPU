@@ -18,16 +18,14 @@ module cpu(input clk,
    wire [31:0] PC_output;
 
    // Dummy
-   assign PC_input = 32'h0;
-   assign PC_value = PC_output;
+   assign PC_value = PC_input;
    
-
    reg_async_reset #(.width(32)) PC(.clk(clk),
                                     .rst(rst),
                                     .D(PC_input),
                                     .Q(PC_output));
-   
-   
+
+   alu ALU(.in0(PC_output), .in1(32'h1), .op_select(3'h3), .out(PC_input));
    
    main_memory #(.depth(1)) main_mem(.read_address(read_address),
                                      .read_data(read_data),
