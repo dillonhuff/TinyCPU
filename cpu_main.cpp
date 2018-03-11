@@ -40,11 +40,15 @@ uint32_t tiny_CPU_binop(const int op_code,
                         const int reg0,
                         const int reg1,
                         const int dest_reg) {
-  return 0;
+  uint32_t instr = 0;
+  set_instr_type(TINY_CPU_INSTRUCTION_ALU_OP, &instr);
+  return instr;
 }
 
 uint32_t tiny_CPU_load(const int mem_loc_reg, const int dest_reg) {
-  return 0;
+  uint32_t instr = 0;
+  set_instr_type(TINY_CPU_INSTRUCTION_LOAD, &instr);
+  return instr;
 }
 
 uint32_t tiny_CPU_store(const int data_reg, const int mem_loc_reg) {
@@ -160,7 +164,7 @@ void test_increment_program(const int argc, char** argv) {
     top->clk = i % 2;
     top->eval();
 
-    cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
+    cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
   }
 
   cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;

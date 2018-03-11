@@ -97,11 +97,27 @@ module cpu(input clk,
    assign PC_input = alu_result;
 
    // Main memory control
-   main_memory #(.depth(2048)) main_mem(.read_address(read_address),
+
+   wire [31:0] main_mem_raddr;
+   wire [31:0] main_mem_waddr;
+   wire [31:0] main_mem_wdata;
+   wire        main_mem_wen;
+
+   main_memory_control main_mem_ctrl(
+                                     // Inputs to select from
+
+                                     // Outputs to send to main_memory
+                                     .read_address(main_mem_raddr),
+                                     .write_address(main_mem_waddr),
+                                     .write_data(main_mem_wdata),
+                                     .write_enable(main_mem_wen)
+                                     );
+   
+   main_memory #(.depth(2048)) main_mem(.read_address(main_mem_raddr),
                                         .read_data(read_data),
-                                        .write_address(write_address),
-                                        .write_data(write_data),
-                                        .write_enable(write_enable),
+                                        .write_address(main_mem_waddr),
+                                        .write_data(main_mem_wdata),
+                                        .write_enable(main_mem_wen),
                                         .clk(clk));
 
    // Register file
@@ -127,6 +143,7 @@ module cpu(input clk,
 
                                        .load_mem_reg(load_mem_reg),
                                        .load_mem_data(read_data),
+                                       .load_mem_addr_reg(load_mem_addr_reg),
 
                                        .alu_op_reg_0(alu_op_reg_0),
                                        .alu_op_reg_1(alu_op_reg_1),

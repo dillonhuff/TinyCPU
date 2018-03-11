@@ -16,13 +16,14 @@ module register_file_control(input [2:0] stage,
                              input [31:0]  load_imm_data,
 
                              input [4:0]   load_mem_reg,
+                             input [4:0]   load_mem_addr_reg,
                              input [31:0]  load_mem_data,
                              
                              input [4:0]   alu_op_reg_0,
                              input [4:0]   alu_op_reg_1,
 
                              input [4:0]   alu_op_reg_res,
-                             input [31:0] alu_result,
+                             input [31:0]  alu_result,
                              
                              output [4:0]  write_address,
                              output [31:0] write_data,
@@ -65,7 +66,13 @@ module register_file_control(input [2:0] stage,
          assert(!is_alu_instr);
 
          write_address_i = load_mem_reg;
-         write_data_i = load_mem_data;
+
+         if (stage == `STAGE_REGISTER_UPDATE) begin
+            write_data_i = load_mem_data;
+         end else if (stage == `STAGE_MEMORY_READ) begin
+            read_reg_0_i = load_mem_addr_reg;
+         end
+           
 
       end else if (is_alu_instr) begin
          assert(!is_load_imm_instr);
