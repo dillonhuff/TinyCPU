@@ -7,14 +7,38 @@ using namespace std;
 
 #define MEM cpu__DOT__main_mem__DOT__mem
 
-uint32_t tiny_CPU_no_op_instr() {
+#define TINY_CPU_OR 0
+#define TINY_CPU_AND 1
+#define TINY_CPU_XOR 2
+#define TINY_CPU_ADD 3
+
+uint32_t tiny_CPU_no_op() {
+  return 0;
+}
+
+uint32_t tiny_CPU_load_immediate(const int value, const int dest_reg) {
+  return 0;
+}
+
+uint32_t tiny_CPU_binop(const int op_code,
+                        const int reg0,
+                        const int reg1,
+                        const int dest_reg) {
+  return 0;
+}
+
+uint32_t tiny_CPU_load(const int mem_loc_reg, const int dest_reg) {
+  return 0;
+}
+
+uint32_t tiny_CPU_store(const int data_reg, const int mem_loc_reg) {
   return 0;
 }
 
 void load_increment_program(const int mem_depth, Vcpu* const top) {
   // Set all memory to be no-ops
   for (int i = 0; i < mem_depth; i++) {
-    uint32_t no_op = tiny_CPU_no_op_instr();
+    uint32_t no_op = tiny_CPU_no_op();
     top->MEM[i] = no_op;
   }
 
