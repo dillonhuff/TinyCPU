@@ -5,6 +5,8 @@
 
 using namespace std;
 
+#define MEM top->cpu__DOT__main_mem__DOT__mem
+
 int main(const int argc, char** argv) {
   Vcpu* top = new Vcpu();
 
