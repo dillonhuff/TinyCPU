@@ -5,6 +5,7 @@ module cpu(input clk,
 `ifdef DEBUG_ON
            , output [31:0] PC_value
            , output [31:0] mem_read_data
+           , output [4:0] current_instruction_type_dbg
 `endif // DEBUG_ON
            );
 
@@ -21,7 +22,29 @@ module cpu(input clk,
 `ifdef DEBUG_ON
    assign PC_value = PC_output;
    assign mem_read_data = read_data;
+   assign current_instruction_type_dbg = current_instruction_type;
+
 `endif // DEBUG_ON
+
+   // NOTE: Need to add a stage counter?
+
+   wire [2:0]       current_stage;
+   
+   counter #(.N(5)) stage_counter(.clk(clk),
+                                  .rst(rst),
+                                  .out(current_stage));
+   
+   reg_async_reset #(.width(32)) issue_register(.clk(clk),
+                                                .rst(rst),
+                                                .D(read_data),
+                                                .Q(current_instruction));
+
+   // Decoding
+   wire [31:0] current_instruction;
+   wire [4:0] current_instruction_type;
+   decoder instruction_decode(.instruction(current_instruction),
+                              .instruction_type(current_instruction_type));
+   
    
    reg_async_reset #(.width(32)) PC(.clk(clk),
                                     .rst(rst),

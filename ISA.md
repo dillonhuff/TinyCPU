@@ -1,11 +1,11 @@
 # Instructions
 
+* no_op
 * load_immediate <IMM>, <REG>
 * load_memory <MEM LOC REG>, <DEST REG>
 * store <DATA REG>, <MEM LOC REG>
 * jump <CONDITION REG>, <VALUE REG>
-* <BINOP> <OP 0 REG>, <OP 1 REG>, <DEST REG>
-* no_op
+* <ALU OP> <OP 0 REG>, <OP 1 REG>, <DEST REG>
 
 # Instruction formats:
 
@@ -15,27 +15,27 @@
 
 [31:27] --> Instruction code
 
-load immediate
+no op: op code 0
+No data
+
+load immediate: op code 1
 [26:11] --> 16 bit immediate
 [10:6] --> 5 bit register ID
 
-load memory
+load memory: op code 2
 [26:22] --> mem location register ID
 [21:17] --> dest register ID
 
-store
+store: op code 3
 [26:22] --> data register ID
 [21:17] --> mem location register ID
 
-jump
+jump: op code 4
 [26:22] --> condition register ID
 [21:17] --> memory location register ID
 
-binop
+ALU op: op code 5
 [26:22] --> operand0 reg ID
-[21:17] --> operand1 reg ID
+[21:17] --> operand1 reg ID (ignored for unary operators)
 [16:12] --> result reg ID
 [11:9]  --> ALU operation
-
-no op
-No entries

@@ -7,6 +7,15 @@ using namespace std;
 
 #define MEM cpu__DOT__main_mem__DOT__mem
 
+enum instruction_type {
+  TINY_CPU_INSTRUCTION_NO_OP = 0,
+  TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE = 1,
+  TINY_CPU_INSTRUCTION_LOAD = 2,
+  TINY_CPU_INSTRUCTION_STORE = 3,
+  TINY_CPU_INSTRUCTION_JUMP = 4,
+  TINY_CPU_INSTRUCTION_ALU_OP = 5,
+};
+
 #define TINY_CPU_OR 0
 #define TINY_CPU_AND 1
 #define TINY_CPU_XOR 2
@@ -16,8 +25,15 @@ uint32_t tiny_CPU_no_op() {
   return 0;
 }
 
+void set_instr_type(const instruction_type tp, uint32_t* instr) {
+  uint32_t tp_int = (uint32_t) tp;
+  *instr = (*instr) | (tp_int << 27);
+}
+
 uint32_t tiny_CPU_load_immediate(const int value, const int dest_reg) {
-  return 0;
+  uint32_t instr = 0;
+  set_instr_type(TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE, &instr);
+  return instr;
 }
 
 uint32_t tiny_CPU_binop(const int op_code,
@@ -32,7 +48,9 @@ uint32_t tiny_CPU_load(const int mem_loc_reg, const int dest_reg) {
 }
 
 uint32_t tiny_CPU_store(const int data_reg, const int mem_loc_reg) {
-  return 0;
+  uint32_t instr = 0;
+  set_instr_type(TINY_CPU_INSTRUCTION_STORE, &instr);
+  return instr;
 }
 
 void load_increment_program(const int mem_depth, Vcpu* const top) {
@@ -107,6 +125,36 @@ void test_increment_program(const int argc, char** argv) {
   top->clk = 0;
   top->eval();
 
+  top->clk = 0;
+  top->eval();
+
+  top->clk = 1;
+  top->eval();
+
+  // First instruction is load_immediate
+  cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
+  assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
+
+  top->clk = 0;
+  top->eval();
+
+  top->clk = 1;
+  top->eval();
+
+  // Second instruction is load_immediate
+  cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
+  assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
+
+  top->clk = 0;
+  top->eval();
+
+  top->clk = 1;
+  top->eval();
+
+  // Third instruction is store
+  cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
+  assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_STORE);
+  
   int n_cycles = 100;
   for (int i = 0; i < n_cycles; i++) {
     top->clk = i % 2;
