@@ -5,12 +5,17 @@ module reg_async_reset(input [width - 1:0] D,
 
    parameter width = 32;
 
+   reg [width - 1: 0]                                      Q_data;
+   
    always @(posedge clk or negedge rst) begin
       if (!rst) begin
-         Q <= 0;
+         Q_data <= 0;
       end else begin
-         Q <= D;
+         Q_data <= D;
       end
    end
+
+   assign Q = Q_data;
+   
    
 endmodule

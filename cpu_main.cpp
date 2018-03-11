@@ -54,13 +54,12 @@ void load_increment_program(const int mem_depth, Vcpu* const top) {
   
 }
 
-int main(const int argc, char** argv) {
+void test_PC(const int argc, char** argv) {
   Vcpu* top = new Vcpu();
-
-  load_increment_program(2048, top);
 
   top->rst = 0;
   top->clk = 0;
+
   top->eval();
 
   top->rst = 1;
@@ -71,12 +70,59 @@ int main(const int argc, char** argv) {
   top->clk = 0;
   top->eval();
 
+  top->rst = 1;
+  top->clk = 0;
+  top->eval();
+  
   int n_cycles = 10;
   for (int i = 0; i < n_cycles; i++) {
     top->clk = i % 2;
+    top->eval();
   }
 
   assert(top->PC_value > 0);
+
+  top->final();
+}
+
+void test_increment_program(const int argc, char** argv) {
+  Vcpu* top = new Vcpu();
+
+  load_increment_program(2048, top);
+
+  top->rst = 0;
+  top->clk = 0;
+
+  top->eval();
+
+  top->rst = 1;
+  top->clk = 0;
+  top->eval();
+
+  top->rst = 0;
+  top->clk = 0;
+  top->eval();
+
+  top->rst = 1;
+  top->clk = 0;
+  top->eval();
+
+  int n_cycles = 100;
+  for (int i = 0; i < n_cycles; i++) {
+    top->clk = i % 2;
+    top->eval();
+  }
+
+  cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
+  assert(top->MEM[1000] == 5);
+
+  top->final();
+}
+
+
+int main(const int argc, char** argv) {
+  test_PC(argc, argv);
+  test_increment_program(argc, argv);
 
   cout << "$$$$ CPU tests passed" << endl;
 }
