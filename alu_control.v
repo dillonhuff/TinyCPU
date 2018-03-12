@@ -19,7 +19,7 @@ module alu_control(input [31:0] PC_output,
    reg [2:0]                     alu_op_select_i;
    always @(*) begin
       if (stage == `STAGE_PC_UPDATE) begin
-         alu_op_select_i = 3'h3;
+         alu_op_select_i = `ALU_OP_ADD;
       end else begin
          alu_op_select_i = alu_operation;
       end

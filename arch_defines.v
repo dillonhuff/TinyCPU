@@ -10,3 +10,10 @@
 `define INSTR_STORE 3
 `define INSTR_JUMP 4
 `define INSTR_ALU_OP 5
+
+`define ALU_OP_OR 0
+`define ALU_OP_AND 1
+`define ALU_OP_XOR 2
+`define ALU_OP_ADD 3
+`define ALU_OP_SUB 4
+`define ALU_OP_MUL 5
