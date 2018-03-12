@@ -47,18 +47,29 @@ uint32_t tiny_CPU_binop(const int op_code,
                         const int dest_reg) {
   uint32_t instr = 0;
   set_instr_type(TINY_CPU_INSTRUCTION_ALU_OP, &instr);
+  instr = instr | (reg0 << 22);
+  instr = instr | (reg1 << 17);
+  instr = instr | (dest_reg << 12);
   return instr;
 }
 
 uint32_t tiny_CPU_load(const int mem_loc_reg, const int dest_reg) {
   uint32_t instr = 0;
   set_instr_type(TINY_CPU_INSTRUCTION_LOAD, &instr);
+
+  instr = instr | (mem_loc_reg << 22);
+  instr = instr | (dest_reg << 17);
+  
   return instr;
 }
 
 uint32_t tiny_CPU_store(const int data_reg, const int mem_loc_reg) {
   uint32_t instr = 0;
   set_instr_type(TINY_CPU_INSTRUCTION_STORE, &instr);
+
+  instr = instr | (data_reg << 22);
+  instr = instr | (mem_loc_reg << 17);
+  
   return instr;
 }
 
@@ -77,6 +88,7 @@ void load_increment_program(const int mem_depth, Vcpu* const top) {
   top->MEM[4] = tiny_CPU_load_immediate(1, 3); // reg3 <- 1
   top->MEM[5] = tiny_CPU_binop(TINY_CPU_ADD, 2, 3, 2); // reg2 <- reg2 + 1
   top->MEM[6] = tiny_CPU_store(2, 1); // mem[1000] <= reg2
+  // TODO: Insert jump
   
   
 }

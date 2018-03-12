@@ -17,9 +17,9 @@ module cpu(input clk,
 
    /* verilator lint_off UNUSED */
    wire [31:0] read_data;
-   wire [31:0] write_address;
-   wire [31:0] write_data;
-   wire write_enable;
+   //wire [31:0] write_address;
+   //wire [31:0] write_data;
+   //wire write_enable;
 
    wire [31:0] PC_input;
    wire [31:0] PC_output;
@@ -28,7 +28,6 @@ module cpu(input clk,
    assign PC_value = PC_output;
    assign mem_read_data = read_data;
    assign current_instruction_type_dbg = current_instruction_type;
-
 `endif // DEBUG_ON
 
    wire [2:0]       current_stage;
@@ -50,6 +49,12 @@ module cpu(input clk,
                                                 .en(is_stage_instr_fetch),
                                                 .D(read_data),
                                                 .Q(current_instruction));
+
+   always @(posedge clk) begin
+      $display("Instruction being issued = %b", issue_register.Q);
+      $display("Value of immediate = %b", load_imm_data);
+      
+   end
 
    wire [31:0] current_instruction;
    wire [4:0] current_instruction_type;
@@ -79,7 +84,6 @@ module cpu(input clk,
                               .alu_op_reg_0(alu_op_reg_0),
                               .alu_op_reg_1(alu_op_reg_1),
                               .alu_op_reg_res(alu_op_reg_res));
-   
 
    // Program counter   
    reg_async_reset #(.width(32)) PC(.clk(clk),
@@ -134,6 +138,7 @@ module cpu(input clk,
    wire [31:0] reg_file_write_data;
    
 
+   /* verilator lint_off UNOPTFLAT */
    wire [31:0]        read_data_0;
    wire [31:0]        read_data_1;
    
@@ -168,14 +173,14 @@ module cpu(input clk,
                           .read_data_0(read_data_0),
                           .read_data_1(read_data_1),
                           .write_address(write_reg),
-                          .write_data(write_data),
+                          .write_data(reg_file_write_data),
                           .write_enable(reg_file_write_en),
                           .clk(clk));
    
    // Dummy assigns
-   assign write_address = 32'h0;
-   assign write_data = 32'h0;
-   assign write_enable = 1'h0;
+   //assign write_address = 32'h0;
+   //assign write_data = 32'h0;
+   //assign write_enable = 1'h0;
    
    
 endmodule
