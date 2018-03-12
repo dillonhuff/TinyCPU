@@ -17,9 +17,6 @@ module cpu(input clk,
 
    /* verilator lint_off UNUSED */
    wire [31:0] read_data;
-   //wire [31:0] write_address;
-   //wire [31:0] write_data;
-   //wire write_enable;
 
    wire [31:0] PC_input;
    wire [31:0] PC_output;
@@ -70,7 +67,11 @@ module cpu(input clk,
    wire [4:0]  alu_op_reg_0;
    wire [4:0] alu_op_reg_1;
    wire [4:0] alu_op_reg_res;
+   wire [2:0] alu_operation;
 
+   wire [4:0] store_data_reg;
+   wire [4:0] store_addr_reg;
+   
    decoder instruction_decode(.instruction(current_instruction),
 
                               // Outputs
@@ -81,9 +82,13 @@ module cpu(input clk,
                               .load_mem_addr_reg(load_mem_addr_reg),
                               .load_mem_reg(load_mem_reg),
 
+                              .store_data_reg(store_data_reg),
+                              .store_addr_reg(store_addr_reg),
+
                               .alu_op_reg_0(alu_op_reg_0),
                               .alu_op_reg_1(alu_op_reg_1),
-                              .alu_op_reg_res(alu_op_reg_res));
+                              .alu_op_reg_res(alu_op_reg_res),
+                              .alu_operation(alu_operation));
 
    // Program counter   
    reg_async_reset #(.width(32)) PC(.clk(clk),
@@ -95,7 +100,26 @@ module cpu(input clk,
    // Arithmetic logic unit
    wire [31:0] alu_result;
 
-   alu ALU(.in0(PC_output), .in1(32'h1), .op_select(3'h3), .out(alu_result));
+   wire [31:0] alu_in0;
+   wire [31:0] alu_in1;
+   wire [2:0]  alu_op_select;
+   
+   
+   alu_control alu_ctrl(.PC_output(PC_output),
+                        .stage(current_stage),
+                        .alu_operation(alu_operation),
+
+                        // Outputs sent to ALU
+                        .alu_in0(alu_in0),
+                        .alu_in1(alu_in1),
+                        .alu_op_select(alu_op_select)
+                        );
+   
+   //alu ALU(.in0(PC_output), .in1(32'h1), .op_select(3'h3), .out(alu_result));
+   alu ALU(.in0(alu_in0),
+           .in1(alu_in1),
+           .op_select(alu_op_select),
+           .out(alu_result));
 
    assign PC_input = alu_result;
 
@@ -155,6 +179,9 @@ module cpu(input clk,
                                        .load_mem_reg(load_mem_reg),
                                        .load_mem_data(read_data),
                                        .load_mem_addr_reg(load_mem_addr_reg),
+
+                                       .store_addr_reg(store_addr_reg),
+                                       .store_data_reg(store_data_reg),
 
                                        .alu_op_reg_0(alu_op_reg_0),
                                        .alu_op_reg_1(alu_op_reg_1),
