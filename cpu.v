@@ -17,9 +17,6 @@ module cpu(input clk,
    /* verilator lint_off UNUSED */
    wire [31:0] read_data;
 
-   wire [31:0] PC_input;
-   wire [31:0] PC_output;
-
 `ifdef DEBUG_ON
    assign PC_value = PC_output;
    assign mem_read_data = read_data;
@@ -88,7 +85,11 @@ module cpu(input clk,
                               .alu_op_reg_res(alu_op_reg_res),
                               .alu_operation(alu_operation));
 
-   // Program counter   
+   // Program counter
+
+   wire [31:0] PC_input;
+   wire [31:0] PC_output;
+
    reg_async_reset #(.width(32)) PC(.clk(clk),
                                     .rst(rst),
                                     .en(is_stage_PC_update),
