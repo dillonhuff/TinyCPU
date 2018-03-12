@@ -1,15 +1,7 @@
-`define STAGE_INSTR_FETCH 0
-`define STAGE_MEMORY_READ 1
-`define STAGE_REGISTER_UPDATE 2
-`define STAGE_MEMORY_WRITE 3
-`define STAGE_PC_UPDATE 4
-
-`define INSTR_NO_OP 0
-`define INSTR_LOAD_IMMEDIATE 1
-`define INSTR_LOAD 2
-`define INSTR_STORE 3
-`define INSTR_JUMP 4
-`define INSTR_ALU_OP 5
+`ifndef ARCH_DEFINES
+`define ARCH_DEFINES
+`include "arch_defines.v"
+`endif // ARCH_DEFINES
 
 module register_file_control(input [2:0] stage,
                              input [4:0]   current_instruction_type,

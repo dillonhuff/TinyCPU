@@ -1,8 +1,7 @@
-`define STAGE_INSTR_FETCH 0
-`define STAGE_MEMORY_READ 1
-`define STAGE_REGISTER_UPDATE 2
-`define STAGE_MEMORY_WRITE 3
-`define STAGE_PC_UPDATE 4
+`ifndef ARCH_DEFINES
+`define ARCH_DEFINES
+`include "arch_defines.v"
+`endif // ARCH_DEFINES
 
 module cpu(input clk,
            input rst
@@ -50,7 +49,6 @@ module cpu(input clk,
    always @(posedge clk) begin
       $display("Instruction being issued = %b", issue_register.Q);
       $display("Value of immediate = %b", load_imm_data);
-      
    end
 
    wire [31:0] current_instruction;
@@ -203,11 +201,5 @@ module cpu(input clk,
                           .write_data(reg_file_write_data),
                           .write_enable(reg_file_write_en),
                           .clk(clk));
-   
-   // Dummy assigns
-   //assign write_address = 32'h0;
-   //assign write_data = 32'h0;
-   //assign write_enable = 1'h0;
-   
    
 endmodule

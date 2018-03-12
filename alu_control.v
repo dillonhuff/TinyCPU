@@ -1,8 +1,7 @@
-`define STAGE_INSTR_FETCH 0
-`define STAGE_MEMORY_READ 1
-`define STAGE_REGISTER_UPDATE 2
-`define STAGE_MEMORY_WRITE 3
-`define STAGE_PC_UPDATE 4
+`ifndef ARCH_DEFINES
+`define ARCH_DEFINES
+`include "arch_defines.v"
+`endif // ARCH_DEFINES
 
 module alu_control(input [31:0] PC_output,
                    input [2:0]   stage,
