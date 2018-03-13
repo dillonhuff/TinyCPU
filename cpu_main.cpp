@@ -133,7 +133,8 @@ void load_loop_program(const int mem_depth, Vcpu* const top) {
   top->MEM[8] = tiny_CPU_store(2, 1); // mem[1000] <= reg2
   top->MEM[9] = tiny_CPU_binop(TINY_CPU_ADD, 26, 3, 26);
   top->MEM[10] = tiny_CPU_binop(TINY_CPU_NEQ, 25, 26, 27);
-  top->MEM[11] = tiny_CPU_jump(27, 5); // if loop count != loop bound jump to 5
+  top->MEM[11] = tiny_CPU_load_immediate(5, 9); // reg9 <- 5
+  top->MEM[12] = tiny_CPU_jump(27, 9); // if loop count != loop bound jump to 5
 
 }
 

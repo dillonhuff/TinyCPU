@@ -46,6 +46,8 @@ module cpu(input clk,
    always @(posedge clk) begin
       $display("Instruction being issued = %b", issue_register.Q);
       $display("Value of immediate = %b", load_imm_data);
+      $display("Value of PC_input = %d", PC_input);
+      
    end
 
    wire [31:0] current_instruction;
