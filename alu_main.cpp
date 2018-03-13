@@ -77,11 +77,34 @@ void test_xor_out(int argc, char** argv) {
   top->final();
 }
 
+void test_neq_out(int argc, char** argv) {
+  Verilated::commandArgs(argc, argv);
+  Valu* top = new Valu;
+
+  top->in0 = 1;
+  top->in1 = 0;
+  top->op_select = 6;
+
+  top->eval();
+
+  assert(top->out == 1);
+
+  top->in0 = 101;
+  top->in1 = 101;
+
+  top->eval();
+
+  assert(top->out == 0);
+
+  top->final();
+}
+
 int main(int argc, char** argv) {
 
   test_and_out(argc, argv);
   test_or_out(argc, argv);
   test_xor_out(argc, argv);
+  test_neq_out(argc, argv);
 
   cout << "$$$$ ALU tests pass" << endl;
 }

@@ -11,9 +11,9 @@ module register_file(input [4:0]   read_address_0,
    reg [31:0] registers[31:0];
 
    always @(posedge clk) begin
-      $display("Data %h to register %h\n", write_data, write_address);
+      $display("Data %h to register %d\n", write_data, write_address);
       if (write_enable) begin
-         $display("Writing %h to register %h\n", write_data, write_address);
+         $display("Writing %h to register %d\n", write_data, write_address);
          
          registers[write_address] <= write_data;
       end

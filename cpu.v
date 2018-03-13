@@ -47,6 +47,8 @@ module cpu(input clk,
       $display("Instruction being issued = %b", issue_register.Q);
       $display("Value of immediate = %b", load_imm_data);
       $display("Value of PC_input = %d", PC_input);
+      $display("Stage # %d", current_stage);
+      $display("ALU result = %d", alu_result);
       
    end
 
@@ -109,7 +111,6 @@ module cpu(input clk,
    reg_async_reset #(.width(32)) PC(.clk(clk),
                                     .rst(rst),
                                     .en(is_stage_PC_update),
-                                    //.D(PC_input),
                                     .D(PC_input),
                                     .Q(PC_output));
 
