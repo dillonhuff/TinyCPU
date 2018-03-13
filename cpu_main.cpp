@@ -144,23 +144,24 @@ void test_increment_program(const int argc, char** argv) {
 
   load_increment_program(2048, top);
 
-  top->rst = 0;
-  top->clk = 0;
+  // top->rst = 0;
+  // top->clk = 0;
 
-  top->eval();
+  // top->eval();
 
-  top->rst = 1;
-  top->clk = 0;
-  top->eval();
+  // top->rst = 1;
+  // top->clk = 0;
+  // top->eval();
 
-  top->rst = 0;
-  top->clk = 0;
-  top->eval();
+  // top->rst = 0;
+  // top->clk = 0;
+  // top->eval();
 
-  top->rst = 1;
-  top->clk = 0;
-  top->eval();
+  // top->rst = 1;
+  // top->clk = 0;
+  // top->eval();
 
+  RESET(top);
   HIGH_CLOCK(top);
 
   // First instruction is load_immediate
