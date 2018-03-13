@@ -25,7 +25,7 @@ module cpu(input clk,
 
    wire [2:0]       current_stage;
 
-   // Stage control
+   // Stage counter
    counter #(.N(5)) stage_counter(.clk(clk),
                                   .rst(rst),
                                   .out(current_stage));
@@ -114,7 +114,6 @@ module cpu(input clk,
                         .alu_op_select(alu_op_select)
                         );
    
-   //alu ALU(.in0(PC_output), .in1(32'h1), .op_select(3'h3), .out(alu_result));
    alu ALU(.in0(alu_in0),
            .in1(alu_in1),
            .op_select(alu_op_select),
@@ -122,8 +121,7 @@ module cpu(input clk,
 
    assign PC_input = alu_result;
 
-   // Main memory control
-
+   // Main memory
    wire [31:0] main_mem_raddr;
    wire [31:0] main_mem_waddr;
    wire [31:0] main_mem_wdata;

@@ -7,6 +7,8 @@ using namespace std;
 
 #define MEM cpu__DOT__main_mem__DOT__mem
 
+#define HIGH_CLOCK(top) assert(top->clk == 0); (top)->clk = 0; (top)->eval(); (top)->clk = 1; (top)->eval(); (top)->clk = 0; top->eval();
+
 enum instruction_type {
   TINY_CPU_INSTRUCTION_NO_OP = 0,
   TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE = 1,
@@ -146,35 +148,24 @@ void test_increment_program(const int argc, char** argv) {
   top->clk = 0;
   top->eval();
 
-  top->clk = 0;
-  top->eval();
-
-  top->clk = 1;
-  top->eval();
-
-  // First instruction is load_immediate
-  cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
-  assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
-
-  top->clk = 0;
-  top->eval();
-
-  top->clk = 1;
-  top->eval();
-
-  // // Second instruction is load_immediate
-  // cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
-  // assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
-
   // top->clk = 0;
   // top->eval();
 
   // top->clk = 1;
   // top->eval();
 
-  // // Third instruction is store
-  // cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
-  // assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_STORE);
+  HIGH_CLOCK(top);
+
+  // First instruction is load_immediate
+  cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
+  assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
+
+  HIGH_CLOCK(top);
+  // top->clk = 0;
+  // top->eval();
+
+  // top->clk = 1;
+  // top->eval();
   
   int n_cycles = 100;
   for (int i = 0; i < n_cycles; i++) {
