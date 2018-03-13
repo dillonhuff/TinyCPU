@@ -95,13 +95,19 @@ module cpu(input clk,
    
 
    // Program counter
-
    wire [31:0] PC_input;
    wire [31:0] PC_output;
 
+   pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
+                      .alu_result(alu_result),
+                      .jump_condition(read_data_0),
+                      .jump_address(read_data_1),
+                      .pc_input(PC_input));
+   
    reg_async_reset #(.width(32)) PC(.clk(clk),
                                     .rst(rst),
                                     .en(is_stage_PC_update),
+                                    //.D(PC_input),
                                     .D(PC_input),
                                     .Q(PC_output));
 
@@ -130,8 +136,6 @@ module cpu(input clk,
            .in1(alu_in1),
            .op_select(alu_op_select),
            .out(alu_result));
-
-   assign PC_input = alu_result;
 
    // Main memory
    wire [31:0] main_mem_raddr;
