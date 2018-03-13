@@ -148,12 +148,6 @@ void test_increment_program(const int argc, char** argv) {
   top->clk = 0;
   top->eval();
 
-  // top->clk = 0;
-  // top->eval();
-
-  // top->clk = 1;
-  // top->eval();
-
   HIGH_CLOCK(top);
 
   // First instruction is load_immediate
@@ -161,16 +155,13 @@ void test_increment_program(const int argc, char** argv) {
   assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
 
   HIGH_CLOCK(top);
-  // top->clk = 0;
-  // top->eval();
-
-  // top->clk = 1;
-  // top->eval();
   
   int n_cycles = 100;
   for (int i = 0; i < n_cycles; i++) {
-    top->clk = i % 2;
-    top->eval();
+    // top->clk = i % 2;
+    // top->eval();
+
+    HIGH_CLOCK(top);
 
     cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
   }
