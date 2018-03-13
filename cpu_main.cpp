@@ -7,20 +7,20 @@ using namespace std;
 
 #define MEM cpu__DOT__main_mem__DOT__mem
 
-#define RESET(top)   top->rst = 0; \
-  top->clk = 0; \
-  top->eval(); \
-  top->rst = 1; \
-  top->clk = 0; \
-  top->eval(); \
-  top->rst = 0; \
-  top->clk = 0; \
-  top->eval(); \
-  top->rst = 1; \
-  top->clk = 0; \
-  top->eval();
+#define RESET(top)   (top)->rst = 0;            \
+  (top)->clk = 0;                               \
+  (top)->eval();                                \
+  (top)->rst = 1;                               \
+  (top)->clk = 0;                               \
+  (top)->eval();                                \
+  (top)->rst = 0;                               \
+  (top)->clk = 0;                               \
+  (top)->eval();                                \
+  (top)->rst = 1;                               \
+  (top)->clk = 0;                               \
+  (top)->eval();
 
-#define HIGH_CLOCK(top) assert(top->clk == 0); (top)->clk = 0; (top)->eval(); (top)->clk = 1; (top)->eval(); (top)->clk = 0; top->eval();
+#define HIGH_CLOCK(top) assert(top->clk == 0); (top)->eval(); (top)->clk = 1; (top)->eval(); (top)->clk = 0; top->eval();
 
 enum instruction_type {
   TINY_CPU_INSTRUCTION_NO_OP = 0,
@@ -35,6 +35,7 @@ enum instruction_type {
 #define TINY_CPU_AND 1
 #define TINY_CPU_XOR 2
 #define TINY_CPU_ADD 3
+#define TINY_CPU_NEQ 6
 
 uint32_t tiny_CPU_no_op() {
   return 0;
@@ -88,6 +89,37 @@ uint32_t tiny_CPU_store(const int data_reg, const int mem_loc_reg) {
   return instr;
 }
 
+uint32_t tiny_CPU_jump(const int condition_reg, const int destination_reg) {
+  uint32_t instr = 0;
+  set_instr_type(TINY_CPU_INSTRUCTION_JUMP, &instr);
+  instr = instr | (condition_reg << 22);
+  instr = instr | (destination_reg << 17);
+  return instr;
+}
+
+void load_loop_program(const int mem_depth, Vcpu* const top) {
+  // Set all memory to be no-ops
+  for (int i = 0; i < mem_depth; i++) {
+    uint32_t no_op = tiny_CPU_no_op();
+    top->MEM[i] = no_op;
+  }
+
+  top->MEM[0] = tiny_CPU_load_immediate(0, 0);
+  top->MEM[1] = tiny_CPU_load_immediate(1000, 1);
+  top->MEM[2] = tiny_CPU_load_immediate(0, 26); // reg26 <- 0, loop count
+  top->MEM[3] = tiny_CPU_load_immediate(100, 25); // reg25 <- 100, loop bound
+  top->MEM[4] = tiny_CPU_store(0, 1); // mem[1000] = 0
+  // Enter loop
+  top->MEM[5] = tiny_CPU_load(1, 2); // reg2 <- mem[1000]
+  top->MEM[6] = tiny_CPU_load_immediate(1, 3); // reg3 <- 1
+  top->MEM[7] = tiny_CPU_binop(TINY_CPU_ADD, 2, 3, 2); // reg2 <- reg2 + 1
+  top->MEM[8] = tiny_CPU_store(2, 1); // mem[1000] <= reg2
+  top->MEM[9] = tiny_CPU_binop(TINY_CPU_ADD, 26, 3, 26);
+  top->MEM[10] = tiny_CPU_binop(TINY_CPU_NEQ, 25, 26, 27);
+  top->MEM[11] = tiny_CPU_jump(27, 5); // if loop count != loop bound jump to 5
+
+}
+
 void load_increment_program(const int mem_depth, Vcpu* const top) {
   // Set all memory to be no-ops
   for (int i = 0; i < mem_depth; i++) {
@@ -103,8 +135,6 @@ void load_increment_program(const int mem_depth, Vcpu* const top) {
   top->MEM[4] = tiny_CPU_load_immediate(1, 3); // reg3 <- 1
   top->MEM[5] = tiny_CPU_binop(TINY_CPU_ADD, 2, 3, 2); // reg2 <- reg2 + 1
   top->MEM[6] = tiny_CPU_store(2, 1); // mem[1000] <= reg2
-  // TODO: Insert jump
-  
   
 }
 
@@ -144,23 +174,6 @@ void test_increment_program(const int argc, char** argv) {
 
   load_increment_program(2048, top);
 
-  // top->rst = 0;
-  // top->clk = 0;
-
-  // top->eval();
-
-  // top->rst = 1;
-  // top->clk = 0;
-  // top->eval();
-
-  // top->rst = 0;
-  // top->clk = 0;
-  // top->eval();
-
-  // top->rst = 1;
-  // top->clk = 0;
-  // top->eval();
-
   RESET(top);
   HIGH_CLOCK(top);
 
@@ -184,10 +197,34 @@ void test_increment_program(const int argc, char** argv) {
   top->final();
 }
 
+void test_increment_loop(const int argc, char** argv) {
+  Vcpu* top = new Vcpu();
+
+  load_loop_program(2048, top);
+
+  RESET(top);
+
+  int N_STAGES = 5;
+  int program_length = 11; // TODO: Set correctly
+  int n_cycles = 150;
+  for (int i = 0; i < n_cycles; i++) {
+
+    HIGH_CLOCK(top);
+
+    cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
+  }
+
+  cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
+  assert(top->MEM[1000] == ((n_cycles / N_STAGES) / program_length));
+
+  top->final();
+}
+
 
 int main(const int argc, char** argv) {
   test_PC(argc, argv);
   test_increment_program(argc, argv);
+  test_increment_loop(argc, argv);
 
   cout << "$$$$ CPU tests passed" << endl;
 }

@@ -39,3 +39,6 @@ ALU op: op code 5
 [21:17] --> operand1 reg ID (ignored for unary operators)
 [16:12] --> result reg ID
 [11:9]  --> ALU operation
+
+ALU codes:
+TODO: Fill in this info

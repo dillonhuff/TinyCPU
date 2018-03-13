@@ -9,6 +9,7 @@ module alu(input [31:0]  in0,
    wire [31:0]           out_add;
    wire [31:0]           out_sub;
    wire [31:0]           out_mul;
+   wire [31:0]           out_neq;
    
    
    
@@ -18,6 +19,7 @@ module alu(input [31:0]  in0,
    assign out_add = in0 + in1;
    assign out_sub = in0 - in1;
    assign out_mul = in0 * in1;
+   assign out_neq = {{31{1'b0}}, in0 != in1};
 
    reg [31:0]            out_r;
    always @(*) begin
@@ -28,6 +30,7 @@ module alu(input [31:0]  in0,
         3'd3: out_r = out_add;
         3'd4: out_r = out_sub;
         3'd5: out_r = out_mul;
+        3'd6: out_r = out_neq;
         
         default: out_r = 32'h0;
       endcase
