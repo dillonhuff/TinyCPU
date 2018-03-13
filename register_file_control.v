@@ -20,6 +20,9 @@ module register_file_control(input [2:0] stage,
                              input [31:0]  alu_result,
                              input [4:0]   store_data_reg,
                              input [4:0]   store_addr_reg,
+
+                             input [4:0]   jump_condition_reg,
+                             input [4:0]   jump_address_reg,
                              
                              // Outputs are sent to main_memory
                              output [4:0]  write_address,
@@ -31,6 +34,9 @@ module register_file_control(input [2:0] stage,
    wire                                    is_alu_instr;
    assign is_alu_instr = current_instruction_type == `INSTR_ALU_OP;
 
+   wire                                    is_jump_instr;
+   assign is_jump_instr = current_instruction_type == `INSTR_JUMP;
+   
    wire                                    is_load_imm_instr;
    assign is_load_imm_instr = current_instruction_type == `INSTR_LOAD_IMMEDIATE;
 
@@ -48,7 +54,9 @@ module register_file_control(input [2:0] stage,
    assign write_enable = (stage == `STAGE_REGISTER_UPDATE) && current_instr_updates_reg_file;
 
    reg [4:0]                               write_address_i;
+   /* verilator lint_off UNOPTFLAT */
    reg [4:0]                               read_reg_0_i;
+   /* verilator lint_off UNOPTFLAT */
    reg [4:0]                               read_reg_1_i;
    
    reg [31:0]                               write_data_i;
@@ -87,6 +95,9 @@ module register_file_control(input [2:0] stage,
          read_reg_0_i = store_data_reg;
          read_reg_1_i = store_addr_reg;
          
+      end else if (is_jump_instr) begin
+         read_reg_0_i = jump_condition_reg;
+         read_reg_1_i = jump_address_reg;
       end
    end
 

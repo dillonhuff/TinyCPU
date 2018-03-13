@@ -20,7 +20,9 @@ module register_file(input [4:0]   read_address_0,
    end
 
    // Reads are combinational
+   /* verilator lint_off UNOPTFLAT */
    assign read_data_0 = registers[read_address_0];
+   /* verilator lint_off UNOPTFLAT */
    assign read_data_1 = registers[read_address_1];
 
 endmodule

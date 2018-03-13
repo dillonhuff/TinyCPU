@@ -97,6 +97,23 @@ uint32_t tiny_CPU_jump(const int condition_reg, const int destination_reg) {
   return instr;
 }
 
+void load_or_program(const int mem_depth, Vcpu* const top) {
+  // Set all memory to be no-ops
+  for (int i = 0; i < mem_depth; i++) {
+    uint32_t no_op = tiny_CPU_no_op();
+    top->MEM[i] = no_op;
+  }
+
+
+  // res 1101
+  top->MEM[0] = tiny_CPU_load_immediate(0b1000, 12);
+  top->MEM[1] = tiny_CPU_load_immediate(0b0101, 13);
+  top->MEM[2] = tiny_CPU_binop(TINY_CPU_OR, 12, 13, 14);
+  top->MEM[3] = tiny_CPU_load_immediate(234, 20);
+  top->MEM[4] = tiny_CPU_store(14, 20); // mem[1000] = 0
+  
+}
+
 void load_loop_program(const int mem_depth, Vcpu* const top) {
   // Set all memory to be no-ops
   for (int i = 0; i < mem_depth; i++) {
@@ -169,6 +186,28 @@ void test_PC(const int argc, char** argv) {
   top->final();
 }
 
+void test_or_alu(const int argc, char** argv) {
+  Vcpu* top = new Vcpu();
+
+  load_or_program(2048, top);
+
+  RESET(top);
+  
+  int n_cycles = 40;
+  for (int i = 0; i < n_cycles; i++) {
+
+    HIGH_CLOCK(top);
+
+    cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
+  }
+
+  cout << "top->MEM[234] = " << ((int)top->MEM[234]) << endl;
+  assert(top->MEM[234] == 0b1101);
+
+  top->final();
+
+}
+
 void test_increment_program(const int argc, char** argv) {
   Vcpu* top = new Vcpu();
 
@@ -183,7 +222,8 @@ void test_increment_program(const int argc, char** argv) {
 
   HIGH_CLOCK(top);
   
-  int n_cycles = 100;
+  int n_cycles = 40;
+  // Q: How many cycles are needed to increment 2 times?
   for (int i = 0; i < n_cycles; i++) {
 
     HIGH_CLOCK(top);
@@ -192,7 +232,7 @@ void test_increment_program(const int argc, char** argv) {
   }
 
   cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
-  assert(top->MEM[1000] == 5);
+  assert(top->MEM[1000] == 1);
 
   top->final();
 }
@@ -223,6 +263,7 @@ void test_increment_loop(const int argc, char** argv) {
 
 int main(const int argc, char** argv) {
   test_PC(argc, argv);
+  test_or_alu(argc, argv);
   test_increment_program(argc, argv);
   test_increment_loop(argc, argv);
 

@@ -49,6 +49,7 @@ module cpu(input clk,
    end
 
    wire [31:0] current_instruction;
+   /* verilator lint_off UNOPTFLAT */
    wire [4:0] current_instruction_type;
 
    
@@ -66,6 +67,9 @@ module cpu(input clk,
 
    wire [4:0] store_data_reg;
    wire [4:0] store_addr_reg;
+
+   wire [4:0] jump_condition_reg;
+   wire [4:0] jump_address_reg;
    
    decoder instruction_decode(.instruction(current_instruction),
 
@@ -83,7 +87,12 @@ module cpu(input clk,
                               .alu_op_reg_0(alu_op_reg_0),
                               .alu_op_reg_1(alu_op_reg_1),
                               .alu_op_reg_res(alu_op_reg_res),
-                              .alu_operation(alu_operation));
+                              .alu_operation(alu_operation),
+
+                              .jump_condition_reg(jump_condition_reg),
+                              .jump_address_reg(jump_address_reg)
+                              );
+   
 
    // Program counter
 
@@ -107,6 +116,9 @@ module cpu(input clk,
    alu_control alu_ctrl(.PC_output(PC_output),
                         .stage(current_stage),
                         .alu_operation(alu_operation),
+
+                        .reg_value_0(read_data_0),
+                        .reg_value_1(read_data_1),
 
                         // Outputs sent to ALU
                         .alu_in0(alu_in0),
@@ -184,6 +196,9 @@ module cpu(input clk,
                                        .alu_op_reg_1(alu_op_reg_1),
                                        .alu_op_reg_res(alu_op_reg_res),
                                        .alu_result(alu_result),
+
+                                       .jump_condition_reg(jump_condition_reg),
+                                       .jump_address_reg(jump_address_reg),
 
                                        // Inputs to the register file
                                        .write_address(write_reg),
