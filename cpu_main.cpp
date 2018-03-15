@@ -154,7 +154,6 @@ void load_increment_program(const int mem_depth, Vcpu* const top) {
   top->MEM[0] = tiny_CPU_load_immediate(0, 0);
   top->MEM[1] = tiny_CPU_load_immediate(1000, 1);
   top->MEM[2] = tiny_CPU_store(0, 1); // mem[1000] = 0
-  // Enter loop
   top->MEM[3] = tiny_CPU_load(1, 2); // reg2 <- mem[1000]
   top->MEM[4] = tiny_CPU_load_immediate(1, 3); // reg3 <- 1
   top->MEM[5] = tiny_CPU_binop(TINY_CPU_ADD, 2, 3, 2); // reg2 <- reg2 + 1
@@ -224,6 +223,8 @@ void test_or_alu(const int argc, char** argv) {
 }
 
 void test_increment_program(const int argc, char** argv) {
+  cout << "Testing increment" << endl;
+
   Vcpu* top = new Vcpu();
 
   load_increment_program(2048, top);

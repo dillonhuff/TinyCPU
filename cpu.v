@@ -49,6 +49,9 @@ module cpu(input clk,
       $display("Value of PC_input = %d", PC_input);
       $display("Stage # %d", current_stage);
       $display("ALU result = %d", alu_result);
+      $display("alu_in0    = %d", alu_in0);
+      $display("alu_in1    = %d", alu_in1);
+      $display("alu_op     = %d", alu_op_select);
       
    end
 
