@@ -53,7 +53,6 @@ int main(int argc, char** argv) {
   HIGH_CLOCK(top);
 
   assert(top->read_data_0 == 3);
-  
 
   cout << "#### Register file tests pass" << endl;
 }

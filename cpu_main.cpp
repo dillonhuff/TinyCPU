@@ -54,6 +54,7 @@ uint32_t tiny_CPU_binop(const int op_code,
   instr = instr | (reg0 << 22);
   instr = instr | (reg1 << 17);
   instr = instr | (dest_reg << 12);
+  instr = instr | (op_code << 9);
   return instr;
 }
 
@@ -96,7 +97,7 @@ void load_neq_program(const int mem_depth, Vcpu* const top) {
   // res 1101
   top->MEM[0] = tiny_CPU_load_immediate(100, 12);
   top->MEM[1] = tiny_CPU_load_immediate(4, 13);
-  top->MEM[2] = tiny_CPU_binop(TINY_CPU_SUB, 12, 13, 14);
+  top->MEM[2] = tiny_CPU_binop(TINY_CPU_NEQ, 12, 13, 14);
   top->MEM[3] = tiny_CPU_load_immediate(58, 20);
   top->MEM[4] = tiny_CPU_store(14, 20);
   
