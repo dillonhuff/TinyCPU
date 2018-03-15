@@ -26,9 +26,9 @@ module cpu(input clk,
    wire [2:0]       current_stage;
 
    // Stage counter
-   counter #(.N(5)) stage_counter(.clk(clk),
-                                  .rst(rst),
-                                  .out(current_stage));
+   counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),
+                                           .rst(rst),
+                                           .out(current_stage));
 
    wire             is_stage_instr_fetch;
    wire             is_stage_PC_update;

@@ -1,26 +1,12 @@
 #include <iostream>
 
+#include "verilator_common.h"
 #include "verilated.h"
 #include "Vcpu.h"
 
 using namespace std;
 
 #define MEM cpu__DOT__main_mem__DOT__mem
-
-#define RESET(top)   (top)->rst = 0;            \
-  (top)->clk = 0;                               \
-  (top)->eval();                                \
-  (top)->rst = 1;                               \
-  (top)->clk = 0;                               \
-  (top)->eval();                                \
-  (top)->rst = 0;                               \
-  (top)->clk = 0;                               \
-  (top)->eval();                                \
-  (top)->rst = 1;                               \
-  (top)->clk = 0;                               \
-  (top)->eval();
-
-#define HIGH_CLOCK(top) assert(top->clk == 0); (top)->eval(); (top)->clk = 1; (top)->eval(); (top)->clk = 0; top->eval();
 
 enum instruction_type {
   TINY_CPU_INSTRUCTION_NO_OP = 0,
