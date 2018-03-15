@@ -165,27 +165,11 @@ void load_increment_program(const int mem_depth, Vcpu* const top) {
 void test_PC(const int argc, char** argv) {
   Vcpu* top = new Vcpu();
 
-  top->rst = 0;
-  top->clk = 0;
-
-  top->eval();
-
-  top->rst = 1;
-  top->clk = 0;
-  top->eval();
-
-  top->rst = 0;
-  top->clk = 0;
-  top->eval();
-
-  top->rst = 1;
-  top->clk = 0;
-  top->eval();
+  RESET(top);
   
   int n_cycles = 10;
   for (int i = 0; i < n_cycles; i++) {
-    top->clk = i % 2;
-    top->eval();
+    HIGH_CLOCK(top);
   }
 
   assert(top->PC_value > 0);

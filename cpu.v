@@ -149,6 +149,7 @@ module cpu(input clk,
    main_memory_control main_mem_ctrl(
                                      // Inputs to select from
                                      .stage(current_stage),
+                                     .current_instr_type(current_instruction_type),
                                      .PC_value(PC_output),
 
                                      .memory_read_address(read_data_0),

@@ -8,6 +8,8 @@ module main_memory_control(
                            // Inputs
                            input [2:0]   stage,
 
+                           input [4:0] current_instr_type,
+
                            input [31:0]  PC_value,
                            input [31:0]  memory_read_address,
 
@@ -20,7 +22,10 @@ module main_memory_control(
                            output [31:0] write_data,
                            output        write_enable);
 
-   assign write_enable = (stage == `STAGE_MEMORY_WRITE);
+   wire                                  current_instr_is_store;
+   assign current_instr_is_store = current_instr_type == `INSTR_STORE;
+   
+   assign write_enable = (stage == `STAGE_MEMORY_WRITE) && current_instr_is_store;
 
    reg [31:0]                            read_address_i;
 
