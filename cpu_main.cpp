@@ -24,6 +24,7 @@ enum instruction_type {
 #define TINY_CPU_SUB 4
 #define TINY_CPU_MUL 5
 #define TINY_CPU_NEQ 6
+#define TINY_CPU_LOGIC_NOT 7
 
 uint32_t tiny_CPU_no_op() {
   return 0;
@@ -42,6 +43,17 @@ uint32_t tiny_CPU_load_immediate(const int value, const int dest_reg) {
   instr = instr | (dest_reg << 6);
 
   cout << "Load imm = " << bitset<32>(instr) << endl;
+  return instr;
+}
+
+uint32_t tiny_CPU_unop(const int op_code,
+                       const int reg0,
+                       const int dest_reg) {
+  uint32_t instr = 0;
+  set_instr_type(TINY_CPU_INSTRUCTION_ALU_OP, &instr);
+  instr = instr | (reg0 << 22);
+  instr = instr | (dest_reg << 12);
+  instr = instr | (op_code << 7);
   return instr;
 }
 
@@ -155,6 +167,20 @@ void load_load_store_program(const int mem_depth, Vcpu* const top) {
   top->MEM[0] = tiny_CPU_load_immediate(5, 0);
   top->MEM[1] = tiny_CPU_load_immediate(1000, 1);
   top->MEM[2] = tiny_CPU_store(0, 1); // mem[1000] = 5
+}
+
+void load_logical_negation_program(const int mem_depth, Vcpu* const top) {
+  // Set all memory to be no-ops
+  for (int i = 0; i < mem_depth; i++) {
+    uint32_t no_op = tiny_CPU_no_op();
+    top->MEM[i] = no_op;
+  }
+
+  top->MEM[0] = tiny_CPU_load_immediate(0, 0); // reg0 <- 0
+  top->MEM[1] = tiny_CPU_load_immediate(34, 4); // reg3 <- 34
+  top->MEM[2] = tiny_CPU_unop(TINY_CPU_LOGIC_NOT, 2, 3); // reg2 <- reg2 + 1
+  top->MEM[3] = tiny_CPU_store(3, 4); // mem[34] <= reg2
+
 }
 
 void load_increment_program(const int mem_depth, Vcpu* const top) {
@@ -324,7 +350,25 @@ void test_increment_loop(const int argc, char** argv) {
   top->final();
 }
 
+void test_logical_negation(const int argc, char** argv) {
+  Vcpu* top = new Vcpu();
+
+  load_logical_negation_program(2048, top);
+
+  RESET(top);
+
+  int n_cycles = 50;
+  for (int i = 0; i < n_cycles; i++) {
+    HIGH_CLOCK(top);
+  }
+  cout << "top->MEM[34] = " << ((int)top->MEM[34]) << endl;
+  assert(top->MEM[34] == 1);
+
+  top->final();
+}
+
 int main(const int argc, char** argv) {
+  test_logical_negation(argc, argv);
   test_neq_alu(argc, argv);
   test_PC(argc, argv);
   test_or_alu(argc, argv);
