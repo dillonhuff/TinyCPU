@@ -304,9 +304,13 @@ void test_increment_loop(const int argc, char** argv) {
 
   RESET(top);
 
+  // Cycles needed to get to MEM[1000] = K
+  // Startup cycles + (N_STAGES*loop_length*K)
+  int K = 3;
   int N_STAGES = 6;
-  int loop_length = 11; // TODO: Set correctly
-  int n_cycles = 150;
+  int startup_cycles = 5;
+  int loop_length = 8; // TODO: Set correctly
+  int n_cycles = startup_cycles + N_STAGES*loop_length*K;
   for (int i = 0; i < n_cycles; i++) {
 
     HIGH_CLOCK(top);
@@ -315,7 +319,7 @@ void test_increment_loop(const int argc, char** argv) {
   }
 
   cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
-  assert(top->MEM[1000] == ((n_cycles / N_STAGES) / program_length));
+  assert(top->MEM[1000] == K);
 
   top->final();
 }
