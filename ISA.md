@@ -38,7 +38,7 @@ ALU op: op code 5
 [26:22] --> operand0 reg ID
 [21:17] --> operand1 reg ID (ignored for unary operators)
 [16:12] --> result reg ID
-[11:9]  --> ALU operation
+[11:7]  --> ALU operation
 
 ALU codes:
 0 -> or

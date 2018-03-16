@@ -54,7 +54,7 @@ uint32_t tiny_CPU_binop(const int op_code,
   instr = instr | (reg0 << 22);
   instr = instr | (reg1 << 17);
   instr = instr | (dest_reg << 12);
-  instr = instr | (op_code << 9);
+  instr = instr | (op_code << 7);
   return instr;
 }
 

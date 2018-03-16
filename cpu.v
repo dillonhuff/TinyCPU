@@ -70,7 +70,7 @@ module cpu(input clk,
    wire [4:0]  alu_op_reg_0;
    wire [4:0] alu_op_reg_1;
    wire [4:0] alu_op_reg_res;
-   wire [2:0] alu_operation;
+   wire [4:0] alu_operation;
 
    wire [4:0] store_data_reg;
    wire [4:0] store_addr_reg;
@@ -122,7 +122,7 @@ module cpu(input clk,
 
    wire [31:0] alu_in0;
    wire [31:0] alu_in1;
-   wire [2:0]  alu_op_select;
+   wire [4:0]  alu_op_select;
    
    
    alu_control alu_ctrl(.PC_output(PC_output),

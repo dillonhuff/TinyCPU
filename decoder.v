@@ -17,7 +17,7 @@ module decoder(
                output [4:0]  alu_op_reg_0,
                output [4:0]  alu_op_reg_1,
                output [4:0]  alu_op_reg_res,
-               output [2:0]  alu_operation,
+               output [4:0]  alu_operation,
 
                output [4:0] jump_condition_reg,
                output [4:0] jump_address_reg
@@ -40,7 +40,7 @@ module decoder(
    assign alu_op_reg_0 = instruction[26:22];
    assign alu_op_reg_1 = instruction[21:17];
    assign alu_op_reg_res = instruction[16:12];
-   assign alu_operation = instruction[11:9];
+   assign alu_operation = instruction[11:7];
 
    assign jump_condition_reg = instruction[26:22];
    assign jump_address_reg = instruction[21:17];
