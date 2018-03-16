@@ -1,7 +1,7 @@
 # Instructions
 
 * no_op
-* load_immediate <IMM>, <REG>
+* load_immediate \<IMM\>, \<REG\>
 * load_memory <MEM LOC REG>, <DEST REG>
 * store <DATA REG>, <MEM LOC REG>
 * jump <CONDITION REG>, <VALUE REG>

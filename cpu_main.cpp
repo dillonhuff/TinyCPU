@@ -324,7 +324,6 @@ void test_increment_loop(const int argc, char** argv) {
   top->final();
 }
 
-
 int main(const int argc, char** argv) {
   test_neq_alu(argc, argv);
   test_PC(argc, argv);
