@@ -41,4 +41,10 @@ ALU op: op code 5
 [11:9]  --> ALU operation
 
 ALU codes:
-TODO: Fill in this info
+0 -> or
+1 -> and
+2 -> xor
+3 -> add
+4 -> sub
+5 -> mul
+6 -> neq
