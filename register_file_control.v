@@ -77,7 +77,7 @@ module register_file_control(input [2:0] stage,
 
          if (stage == `STAGE_REGISTER_UPDATE) begin
             write_data_i = load_mem_data;
-         end else if (stage == `STAGE_MEMORY_READ) begin
+         end else if (stage == `STAGE_MEMORY) begin
             read_reg_0_i = load_mem_addr_reg;
          end
            

@@ -1,13 +1,8 @@
 `define STAGE_INSTR_FETCH 0
-
-// This stage will be merged with memory write in memory phase
-`define STAGE_MEMORY_READ 1
-
-// This stage would normally be called EXE?
-`define STAGE_REGISTER_READ 2
-`define STAGE_MEMORY_WRITE 3
-`define STAGE_REGISTER_UPDATE 4
-`define STAGE_PC_UPDATE 5
+`define STAGE_REGISTER_READ 1
+`define STAGE_MEMORY 2
+`define STAGE_REGISTER_UPDATE 3
+`define STAGE_PC_UPDATE 4
 
 `define NUM_STAGES 6
 

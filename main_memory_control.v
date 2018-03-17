@@ -25,7 +25,7 @@ module main_memory_control(
    wire                                  current_instr_is_store;
    assign current_instr_is_store = current_instr_type == `INSTR_STORE;
    
-   assign write_enable = (stage == `STAGE_MEMORY_WRITE) && current_instr_is_store;
+   assign write_enable = (stage == `STAGE_MEMORY) && current_instr_is_store;
 
    reg [31:0]                            read_address_i;
 
