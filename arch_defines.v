@@ -4,7 +4,7 @@
 `define STAGE_REGISTER_UPDATE 3
 `define STAGE_PC_UPDATE 4
 
-`define NUM_STAGES 6
+`define NUM_STAGES 5
 
 `define INSTR_NO_OP 0
 `define INSTR_LOAD_IMMEDIATE 1
