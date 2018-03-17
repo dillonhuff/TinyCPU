@@ -107,15 +107,22 @@ module cpu(input clk,
    wire [31:0] PC_increment_result;
    assign PC_increment_result = PC_output + 32'h1;
 
+   wire        PC_en;
+
    pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
                       .alu_result(PC_increment_result),
                       .jump_condition(read_data_0),
                       .jump_address(read_data_1),
-                      .pc_input(PC_input));
+                      .stage(current_stage),
+
+                      // To PC
+                      .pc_input(PC_input),
+                      .pc_en(PC_en));
    
    reg_async_reset #(.width(32)) PC(.clk(clk),
                                     .rst(rst),
-                                    .en(is_stage_PC_update),
+                                    .en(PC_en),
+                                    //.en(is_stage_PC_update),
                                     .D(PC_input),
                                     .Q(PC_output));
 

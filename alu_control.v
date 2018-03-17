@@ -5,9 +5,6 @@
 
 // NOTE: Need to update for the case where multiplier works
 module alu_control(
-                   // /* verilator lint_off UNUSED */
-                   // input [31:0]  PC_output,
-                   //input [2:0]   stage,
                    input [4:0]   alu_operation,
 
                    input [31:0]  reg_value_0,
@@ -24,15 +21,9 @@ module alu_control(
 
    reg [4:0]                     alu_op_select_i;
    always @(*) begin
-      // if (stage == `STAGE_PC_UPDATE) begin
-      //    alu_op_select_i = `ALU_OP_ADD;
-      //    alu_in0_i = PC_output;
-      //    alu_in1_i = 32'h1;
-      // end else begin
-         alu_op_select_i = alu_operation;
-         alu_in0_i = reg_value_0;
-         alu_in1_i = reg_value_1;
-      //end
+      alu_op_select_i = alu_operation;
+      alu_in0_i = reg_value_0;
+      alu_in1_i = reg_value_1;
    end
 
    assign alu_op_select = alu_op_select_i;

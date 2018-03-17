@@ -7,12 +7,19 @@ module pc_control(input [4:0] current_instruction_type,
                   input [31:0]  alu_result,
 
                   input [31:0]  jump_condition,
-                  input [31:0] jump_address,
+                  input [31:0]  jump_address,
+
+                  input [2:0] stage,
+
 
                   // Outputs to PC input
-                  output [31:0] pc_input);
+                  output [31:0] pc_input,
+                  output         pc_en
+                  );
    
 
+   assign pc_en = stage == `STAGE_PC_UPDATE;
+   
    reg [31:0]                   pc_input_i;
    always @(*) begin
       if (current_instruction_type == `INSTR_JUMP) begin
