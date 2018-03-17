@@ -56,7 +56,6 @@ module cpu(input clk,
    end
 
    wire [31:0] current_instruction;
-   /* verilator lint_off UNOPTFLAT */
    wire [4:0] current_instruction_type;
 
    
@@ -185,7 +184,6 @@ module cpu(input clk,
    wire [31:0] reg_file_write_data;
    
 
-   /* verilator lint_off UNOPTFLAT */
    wire [31:0]        read_data_0;
    wire [31:0]        read_data_1;
    
