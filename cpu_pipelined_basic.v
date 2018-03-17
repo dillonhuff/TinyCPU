@@ -28,6 +28,8 @@ module cpu_pipelined_basic(input clk,
 
    always @(posedge clk) begin
       $display("Instruction being issued = %b", issue_register.Q);
+      $display("Write back stage instr = %b", write_back_stage_instr);
+      $display("alu_op_result_register = %d", alu_op_result_register);
       $display("Value of immediate = %b", load_imm_data);
       $display("Stage # %d", current_stage);
       $display("ALU result = %d", alu_result);
@@ -35,7 +37,11 @@ module cpu_pipelined_basic(input clk,
       $display("alu_in1    = %d", alu_in1);
       $display("alu_op     = %d", alu_op_select);
    end
+
+   // Register to WB results to
+   wire [4:0]  alu_op_result_register;
    
+
    // Stage counter
    counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),
                                             .rst(rst),
@@ -140,7 +146,8 @@ module cpu_pipelined_basic(input clk,
 
                                        .alu_op_reg_0(alu_op_reg_0),
                                        .alu_op_reg_1(alu_op_reg_1),
-                                       .alu_op_reg_res(alu_op_reg_res),
+                                       .alu_op_reg_res(alu_op_result_register),
+                                       //.alu_op_reg_res(alu_op_reg_res),
                                        .alu_result(alu_result),
 
                                        .jump_condition_reg(jump_condition_reg),
@@ -260,9 +267,7 @@ module cpu_pipelined_basic(input clk,
                                               .en(1'b1),
                                               .D(memory_stage_instr),
                                               .Q(write_back_stage_instr));
-   
-   
 
-   
+   assign alu_op_result_register = write_back_stage_instr[16:12];
    
 endmodule
