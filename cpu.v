@@ -220,14 +220,35 @@ module cpu(input clk,
                                        .write_enable(reg_file_write_en),
                                        .read_reg_0(read_reg_0),
                                        .read_reg_1(read_reg_1));
+
+   wire [31:0] reg_file_data_0;
+   wire [31:0] reg_file_data_1;
    
    register_file reg_file(.read_address_0(read_reg_0),
                           .read_address_1(read_reg_1),
-                          .read_data_0(read_data_0),
-                          .read_data_1(read_data_1),
+                          // .read_data_0(read_data_0),
+                          // .read_data_1(read_data_1),
+
+                          .read_data_0(reg_file_data_0),
+                          .read_data_1(reg_file_data_1),
+
                           .write_address(write_reg),
                           .write_data(reg_file_write_data),
                           .write_enable(reg_file_write_en),
                           .clk(clk));
+
+   
+   reg_async_reset reg_file_data_0_r(.clk(clk),
+                                     .rst(rst),
+                                     .en(1'b1),
+                                     .D(reg_file_data_0),
+                                     .Q(read_data_0));
+
+   reg_async_reset reg_file_data_1_r(.clk(clk),
+                                     .rst(rst),
+                                     .en(1'b1),
+                                     .D(reg_file_data_1),
+                                     .Q(read_data_1));
+   
    
 endmodule
