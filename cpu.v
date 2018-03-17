@@ -27,8 +27,8 @@ module cpu(input clk,
 
    // Stage counter
    counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),
-                                           .rst(rst),
-                                           .out(current_stage));
+                                            .rst(rst),
+                                            .out(current_stage));
 
    wire             is_stage_instr_fetch;
    wire             is_stage_PC_update;
@@ -37,9 +37,15 @@ module cpu(input clk,
    assign is_stage_PC_update = current_stage == `STAGE_PC_UPDATE;
 
    // Instruction decode
+   wire             issue_reg_en;
+   
+   issue_register_control issue_reg_control(.stage(current_stage),
+                                            .issue_reg_en(issue_reg_en));
+   
    reg_async_reset #(.width(32)) issue_register(.clk(clk),
                                                 .rst(rst),
-                                                .en(is_stage_instr_fetch),
+                                                //.en(is_stage_instr_fetch),
+                                                .en(issue_reg_en),
                                                 .D(read_data),
                                                 .Q(current_instruction));
 
@@ -122,7 +128,6 @@ module cpu(input clk,
    reg_async_reset #(.width(32)) PC(.clk(clk),
                                     .rst(rst),
                                     .en(PC_en),
-                                    //.en(is_stage_PC_update),
                                     .D(PC_input),
                                     .Q(PC_output));
 
