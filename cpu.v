@@ -54,7 +54,6 @@ module cpu(input clk,
       $display("alu_in0    = %d", alu_in0);
       $display("alu_in1    = %d", alu_in1);
       $display("alu_op     = %d", alu_op_select);
-      
    end
 
    wire [31:0] current_instruction;

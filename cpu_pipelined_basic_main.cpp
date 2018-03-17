@@ -4,6 +4,10 @@
 #include "verilated.h"
 #include "Vcpu_pipelined_basic.h"
 
+#define MEM cpu_pipelined_basic__DOT__main_mem__DOT__mem
+
+using namespace std;
+
 void load_neq_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
   // Set all memory to be no-ops
   for (int i = 0; i < mem_depth; i++) {
