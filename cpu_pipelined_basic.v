@@ -48,7 +48,7 @@ module cpu_pipelined_basic(input clk,
    always @(posedge clk) begin
       $display("Instruction being issued = %b", issue_register.Q);
       $display("Value of immediate = %b", load_imm_data);
-      $display("Value of PC_input = %d", PC_input);
+      //$display("Value of PC_input = %d", PC_input);
       $display("Stage # %d", current_stage);
       $display("ALU result = %d", alu_result);
       $display("alu_in0    = %d", alu_in0);
@@ -102,29 +102,37 @@ module cpu_pipelined_basic(input clk,
    
 
    // Program counter
-   wire [31:0] PC_input;
    wire [31:0] PC_output;
-
-   wire [31:0] PC_increment_result;
-   assign PC_increment_result = PC_output + 32'h1;
-
-   wire        PC_en;
-
-   pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
-                      .alu_result(PC_increment_result),
-                      .jump_condition(read_data_0),
-                      .jump_address(read_data_1),
-                      .stage(current_stage),
-
-                      // To PC
-                      .pc_input(PC_input),
-                      .pc_en(PC_en));
+   stage_pc_update pc_update(.clk(clk),
+                             .rst(rst),
+                             .current_instruction_type(current_instruction_type),
+                             .current_stage(current_stage),
+                             .read_data_0(read_data_0),
+                             .read_data_1(read_data_1),
+                             .PC_output(PC_output));
    
-   reg_async_reset #(.width(32)) PC(.clk(clk),
-                                    .rst(rst),
-                                    .en(PC_en),
-                                    .D(PC_input),
-                                    .Q(PC_output));
+   // wire [31:0] PC_input;
+
+   // wire [31:0] PC_increment_result;
+   // assign PC_increment_result = PC_output + 32'h1;
+
+   // wire        PC_en;
+
+   // pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
+   //                    .alu_result(PC_increment_result),
+   //                    .jump_condition(read_data_0),
+   //                    .jump_address(read_data_1),
+   //                    .stage(current_stage),
+
+   //                    // To PC
+   //                    .pc_input(PC_input),
+   //                    .pc_en(PC_en));
+   
+   // reg_async_reset #(.width(32)) PC(.clk(clk),
+   //                                  .rst(rst),
+   //                                  .en(PC_en),
+   //                                  .D(PC_input),
+   //                                  .Q(PC_output));
 
    // Arithmetic logic unit
    wire [31:0] alu_result;
