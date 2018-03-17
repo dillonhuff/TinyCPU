@@ -54,9 +54,8 @@ module register_file_control(input [2:0] stage,
    assign write_enable = (stage == `STAGE_REGISTER_UPDATE) && current_instr_updates_reg_file;
 
    reg [4:0]                               write_address_i;
-   /* verilator lint_off UNOPTFLAT */
+
    reg [4:0]                               read_reg_0_i;
-   /* verilator lint_off UNOPTFLAT */
    reg [4:0]                               read_reg_1_i;
    
    reg [31:0]                               write_data_i;

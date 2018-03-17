@@ -226,8 +226,6 @@ module cpu(input clk,
    
    register_file reg_file(.read_address_0(read_reg_0),
                           .read_address_1(read_reg_1),
-                          // .read_data_0(read_data_0),
-                          // .read_data_1(read_data_1),
 
                           .read_data_0(reg_file_data_0),
                           .read_data_1(reg_file_data_1),
