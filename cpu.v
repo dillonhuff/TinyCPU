@@ -45,16 +45,16 @@ module cpu(input clk,
                                                 .D(read_data),
                                                 .Q(current_instruction));
 
-   always @(posedge clk) begin
-      $display("Instruction being issued = %b", issue_register.Q);
-      $display("Value of immediate = %b", load_imm_data);
-      $display("Value of PC_input = %d", PC_input);
-      $display("Stage # %d", current_stage);
-      $display("ALU result = %d", alu_result);
-      $display("alu_in0    = %d", alu_in0);
-      $display("alu_in1    = %d", alu_in1);
-      $display("alu_op     = %d", alu_op_select);
-   end
+   // always @(posedge clk) begin
+   //    $display("Instruction being issued = %b", issue_register.Q);
+   //    $display("Value of immediate = %b", load_imm_data);
+   //    $display("Value of PC_input = %d", PC_input);
+   //    $display("Stage # %d", current_stage);
+   //    $display("ALU result = %d", alu_result);
+   //    $display("alu_in0    = %d", alu_in0);
+   //    $display("alu_in1    = %d", alu_in1);
+   //    $display("alu_op     = %d", alu_op_select);
+   // end
 
    wire [31:0] current_instruction;
    wire [4:0] current_instruction_type;
