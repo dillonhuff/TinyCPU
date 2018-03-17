@@ -33,9 +33,6 @@ module cpu(input clk,
    wire             is_stage_instr_fetch;
    wire             is_stage_PC_update;
 
-   assign is_stage_instr_fetch = current_stage == `STAGE_INSTR_FETCH;
-   assign is_stage_PC_update = current_stage == `STAGE_PC_UPDATE;
-
    // Instruction decode
    wire             issue_reg_en;
    
@@ -44,7 +41,6 @@ module cpu(input clk,
    
    reg_async_reset #(.width(32)) issue_register(.clk(clk),
                                                 .rst(rst),
-                                                //.en(is_stage_instr_fetch),
                                                 .en(issue_reg_en),
                                                 .D(read_data),
                                                 .Q(current_instruction));
