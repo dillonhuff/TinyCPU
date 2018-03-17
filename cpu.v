@@ -127,9 +127,7 @@ module cpu(input clk,
    wire [4:0]  alu_op_select;
    
    
-   alu_control alu_ctrl(.PC_output(PC_output),
-                        .stage(current_stage),
-                        .alu_operation(alu_operation),
+   alu_control alu_ctrl(.alu_operation(alu_operation),
 
                         .reg_value_0(read_data_0),
                         .reg_value_1(read_data_1),

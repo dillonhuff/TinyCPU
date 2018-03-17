@@ -5,10 +5,9 @@
 
 // NOTE: Need to update for the case where multiplier works
 module alu_control(
-                   /* verilator lint_off UNUSED */
-                   input [31:0]  PC_output,
-                   input [2:0]   stage,
-                   /* verilator lint_off UNUSED */
+                   // /* verilator lint_off UNUSED */
+                   // input [31:0]  PC_output,
+                   //input [2:0]   stage,
                    input [4:0]   alu_operation,
 
                    input [31:0]  reg_value_0,
