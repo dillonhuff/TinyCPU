@@ -1,24 +1,20 @@
 `define BUS_WIDTH(w) [$clog2(w - 1) : 0]
 
-// `define STAGE_INSTR_FETCH 0
-// `define STAGE_REGISTER_READ 1
-// `define STAGE_MEMORY 2
-// `define STAGE_REGISTER_UPDATE 3
-// `define STAGE_PC_UPDATE 4
+// Q: Do I want to introduce  the classical fetch, decode, execute, memory, write back
+//    logic? Or just ignore the really long critical path in register read and just
+//    go on?
 
-// `define STAGE_PC_UPDATE 0
-// `define STAGE_INSTR_FETCH 1
-// `define STAGE_REGISTER_READ 2
-// `define STAGE_MEMORY 3
-// `define STAGE_REGISTER_UPDATE 4
+// A: I think I want to add pipeline registers in register read and then break it
+//    in to two stages. That way I can follow the more classical model that most
+//    architecture papers seem to work from.
 
 `define STAGE_PC_UPDATE 0
 `define STAGE_REGISTER_READ 1
-`define STAGE_MEMORY 2
-`define STAGE_REGISTER_UPDATE 3
+`define STAGE_EXECUTE 2
+`define STAGE_MEMORY 3
+`define STAGE_REGISTER_UPDATE 4
 
-`define NUM_STAGES 4
-
+`define NUM_STAGES 5
 
 `define STAGE_WIDTH `BUS_WIDTH(`NUM_STAGES)
 

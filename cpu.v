@@ -126,61 +126,6 @@ module cpu(input clk,
                               );
    
 
-   // Arithmetic logic unit
-   wire [31:0] alu_result;
-
-   wire [31:0] alu_in0;
-   wire [31:0] alu_in1;
-   wire [4:0]  alu_op_select;
-   
-   
-   alu_control alu_ctrl(.alu_operation(alu_operation),
-
-                        .reg_value_0(read_data_0),
-                        .reg_value_1(read_data_1),
-
-                        // Outputs sent to ALU
-                        .alu_in0(alu_in0),
-                        .alu_in1(alu_in1),
-                        .alu_op_select(alu_op_select)
-                        );
-   
-   alu ALU(.in0(alu_in0),
-           .in1(alu_in1),
-           .op_select(alu_op_select),
-           .out(alu_result));
-
-   // Main memory
-   wire [31:0] main_mem_raddr;
-   wire [31:0] main_mem_waddr;
-   wire [31:0] main_mem_wdata;
-   wire        main_mem_wen;
-
-   main_memory_control main_mem_ctrl(
-                                     // Inputs to select from
-                                     .stage(current_stage),
-                                     .current_instr_type(current_instruction_type),
-                                     .PC_value(PC_output),
-
-                                     .memory_read_address(read_data_0),
-
-                                     .memory_write_data(read_data_0),
-                                     .memory_write_address(read_data_1),
-                                     
-                                     // Outputs to send to main_memory
-                                     .read_address(main_mem_raddr),
-                                     .write_address(main_mem_waddr),
-                                     .write_data(main_mem_wdata),
-                                     .write_enable(main_mem_wen)
-                                     );
-   
-   main_memory #(.depth(2048)) main_mem(.read_address(main_mem_raddr),
-                                        .read_data(read_data),
-                                        .write_address(main_mem_waddr),
-                                        .write_data(main_mem_wdata),
-                                        .write_enable(main_mem_wen),
-                                        .clk(clk));
-
    // Register file
    wire [4:0] read_reg_0;
    wire [4:0] read_reg_1;
@@ -251,5 +196,68 @@ module cpu(input clk,
                                      .D(reg_file_data_1),
                                      .Q(read_data_1));
    
+   // Arithmetic logic unit
+   wire [31:0] alu_result_reg_input;
+   wire [31:0] alu_result;
+
+   wire [31:0] alu_in0;
+   wire [31:0] alu_in1;
+   wire [4:0]  alu_op_select;
+   
+   
+   alu_control alu_ctrl(.alu_operation(alu_operation),
+
+                        .reg_value_0(read_data_0),
+                        .reg_value_1(read_data_1),
+
+                        // Outputs sent to ALU
+                        .alu_in0(alu_in0),
+                        .alu_in1(alu_in1),
+                        .alu_op_select(alu_op_select)
+                        );
+   
+   alu ALU(.in0(alu_in0),
+           .in1(alu_in1),
+           .op_select(alu_op_select),
+           .out(alu_result_reg_input));
+
+   reg_async_reset alu_result_reg(.clk(clk),
+                                  .rst(rst),
+                                  .en(1'b1),
+                                  .D(alu_result_reg_input),
+                                  .Q(alu_result));
+
+   // Main memory
+   wire [31:0] main_mem_raddr;
+   wire [31:0] main_mem_waddr;
+   wire [31:0] main_mem_wdata;
+   wire        main_mem_wen;
+
+   main_memory_control main_mem_ctrl(
+                                     // Inputs to select from
+                                     .stage(current_stage),
+                                     .current_instr_type(current_instruction_type),
+                                     .PC_value(PC_output),
+
+                                     .memory_read_address(read_data_0),
+
+                                     .memory_write_data(read_data_0),
+                                     .memory_write_address(read_data_1),
+                                     
+                                     // Outputs to send to main_memory
+                                     .read_address(main_mem_raddr),
+                                     .write_address(main_mem_waddr),
+                                     .write_data(main_mem_wdata),
+                                     .write_enable(main_mem_wen)
+                                     );
+   
+   main_memory #(.depth(2048)) main_mem(.read_address(main_mem_raddr),
+                                        .read_data(read_data),
+                                        .write_address(main_mem_waddr),
+                                        .write_data(main_mem_wdata),
+                                        .write_enable(main_mem_wen),
+                                        .clk(clk));
+
+   // Insert a write back register here
    
 endmodule

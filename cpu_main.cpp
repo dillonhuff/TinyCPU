@@ -202,7 +202,7 @@ void test_increment_loop(const int argc, char** argv) {
   // Cycles needed to get to MEM[1000] = K
   // N_STAGES*(Startup instructions + loop_length*K)
   int K = 3;
-  int N_STAGES = 4; //5;
+  int N_STAGES = 5;
   int startup_instructions = 5;
   int loop_length = 8;
   int n_cycles = N_STAGES*(startup_instructions + loop_length*K);
