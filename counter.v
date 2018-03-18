@@ -1,10 +1,13 @@
-module counter(input clk,
-               input                          rst,
-               output [$clog2(N) - 1 : 0] out);
-   
-   parameter N = 16;
+`ifndef ARCH_DEFINES
+`define ARCH_DEFINES
+`include "arch_defines.v"
+`endif // ARCH_DEFINES
 
-   reg [$clog2(N) - 1:0]                  data;
+module counter #(parameter N=4) (input clk,
+                                 input  rst,
+                                 output `BUS_WIDTH(N) out);
+   reg `BUS_WIDTH(N) data;
+
    always @(posedge clk or negedge rst) begin
       if (!rst) begin
          data <= 0;

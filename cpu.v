@@ -23,7 +23,7 @@ module cpu(input clk,
    assign current_instruction_type_dbg = current_instruction_type;
 `endif // DEBUG_ON
 
-   wire `STAGE_WIDTH       current_stage;
+   wire `STAGE_WIDTH current_stage;
 
    // Stage counter
    counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),

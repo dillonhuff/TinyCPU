@@ -1,3 +1,5 @@
+`define BUS_WIDTH(w) [$clog2(w - 1) : 0]
+
 // `define STAGE_INSTR_FETCH 0
 // `define STAGE_REGISTER_READ 1
 // `define STAGE_MEMORY 2
@@ -17,7 +19,8 @@
 
 `define NUM_STAGES 4
 
-`define STAGE_WIDTH [$clog2(`NUM_STAGES) - 1 : 0]
+
+`define STAGE_WIDTH `BUS_WIDTH(`NUM_STAGES)
 
 `define INSTR_NO_OP 0
 `define INSTR_LOAD_IMMEDIATE 1
