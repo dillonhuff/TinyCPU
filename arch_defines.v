@@ -4,6 +4,12 @@
 `define STAGE_REGISTER_UPDATE 3
 `define STAGE_PC_UPDATE 4
 
+// `define STAGE_PC_UPDATE 0
+// `define STAGE_INSTR_FETCH 1
+// `define STAGE_REGISTER_READ 2
+// `define STAGE_MEMORY 3
+// `define STAGE_REGISTER_UPDATE 4
+
 `define NUM_STAGES 5
 
 `define INSTR_NO_OP 0

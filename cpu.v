@@ -33,6 +33,31 @@ module cpu(input clk,
    wire             is_stage_instr_fetch;
    wire             is_stage_PC_update;
 
+   // Program counter
+   wire [31:0] PC_input;
+   wire [31:0] PC_output;
+
+   wire [31:0] PC_increment_result;
+   assign PC_increment_result = PC_output + 32'h1;
+
+   wire        PC_en;
+
+   pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
+                      .alu_result(PC_increment_result),
+                      .jump_condition(read_data_0),
+                      .jump_address(read_data_1),
+                      .stage(current_stage),
+
+                      // To PC
+                      .pc_input(PC_input),
+                      .pc_en(PC_en));
+   
+   reg_async_reset #(.width(32)) PC(.clk(clk),
+                                    .rst(rst),
+                                    .en(PC_en),
+                                    .D(PC_input),
+                                    .Q(PC_output));
+
    // Instruction decode
    wire             issue_reg_en;
    
@@ -45,16 +70,16 @@ module cpu(input clk,
                                                 .D(read_data),
                                                 .Q(current_instruction));
 
-   // always @(posedge clk) begin
-   //    $display("Instruction being issued = %b", issue_register.Q);
-   //    $display("Value of immediate = %b", load_imm_data);
-   //    $display("Value of PC_input = %d", PC_input);
-   //    $display("Stage # %d", current_stage);
-   //    $display("ALU result = %d", alu_result);
-   //    $display("alu_in0    = %d", alu_in0);
-   //    $display("alu_in1    = %d", alu_in1);
-   //    $display("alu_op     = %d", alu_op_select);
-   // end
+   always @(posedge clk or negedge rst) begin
+      $display("Instruction being issued = %b", issue_register.Q);
+      // $display("Value of immediate = %b", load_imm_data);
+      // $display("Value of PC_input = %d", PC_input);
+      // $display("Stage # %d", current_stage);
+      // $display("ALU result = %d", alu_result);
+      // $display("alu_in0    = %d", alu_in0);
+      // $display("alu_in1    = %d", alu_in1);
+      // $display("alu_op     = %d", alu_op_select);
+   end
 
    wire [31:0] current_instruction;
    wire [4:0] current_instruction_type;
@@ -100,31 +125,6 @@ module cpu(input clk,
                               .jump_address_reg(jump_address_reg)
                               );
    
-
-   // Program counter
-   wire [31:0] PC_input;
-   wire [31:0] PC_output;
-
-   wire [31:0] PC_increment_result;
-   assign PC_increment_result = PC_output + 32'h1;
-
-   wire        PC_en;
-
-   pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
-                      .alu_result(PC_increment_result),
-                      .jump_condition(read_data_0),
-                      .jump_address(read_data_1),
-                      .stage(current_stage),
-
-                      // To PC
-                      .pc_input(PC_input),
-                      .pc_en(PC_en));
-   
-   reg_async_reset #(.width(32)) PC(.clk(clk),
-                                    .rst(rst),
-                                    .en(PC_en),
-                                    .D(PC_input),
-                                    .Q(PC_output));
 
    // Arithmetic logic unit
    wire [31:0] alu_result;
