@@ -9,7 +9,7 @@ module pc_control(input [4:0] current_instruction_type,
                   input [31:0]  jump_condition,
                   input [31:0]  jump_address,
 
-                  input [2:0] stage,
+                  input `STAGE_WIDTH stage,
 
 
                   // Outputs to PC input

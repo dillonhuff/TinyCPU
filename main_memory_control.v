@@ -6,9 +6,10 @@
 module main_memory_control(
 
                            // Inputs
-                           input [2:0]   stage,
+                           //input [2:0]   stage,
+                           input `STAGE_WIDTH stage,
 
-                           input [4:0] current_instr_type,
+                           input [4:0]   current_instr_type,
 
                            input [31:0]  PC_value,
                            input [31:0]  memory_read_address,

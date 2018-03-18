@@ -3,7 +3,8 @@
 `include "arch_defines.v"
 `endif // ARCH_DEFINES
 
-module register_file_control(input [2:0] stage,
+module register_file_control(//input [2:0] stage,
+                             input `STAGE_WIDTH stage,
                              input [4:0]   current_instruction_type,
 
                              input [4:0]   load_imm_reg,

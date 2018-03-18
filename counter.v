@@ -2,7 +2,7 @@ module counter(input clk,
                input                          rst,
                output [$clog2(N) - 1 : 0] out);
    
-   parameter N = 2;
+   parameter N = 16;
 
    reg [$clog2(N) - 1:0]                  data;
    always @(posedge clk or negedge rst) begin
