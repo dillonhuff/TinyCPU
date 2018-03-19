@@ -274,21 +274,12 @@ module cpu(input clk,
    end
 
    assign exe_result = exe_result_i;
-   
+
+   // Stores the result to be written back to memory   
    reg_async_reset result_storage_MEM_reg(.clk(clk),
                                           .rst(rst),
                                           .en(1'b1),
                                           .D(exe_result),
                                           .Q(write_back_register_input));
-   
-   // Insert a write back register here
-
-   // wire [31:0] write_back_register_output;
-   // reg_async_reset write_back_register(.clk(clk),
-   //                                     .rst(rst),
-   //                                     .en(1'b1),
-   //                                     .D(write_back_register_input),
-   //                                     .Q(write_back_register_output));
-   
    
 endmodule
