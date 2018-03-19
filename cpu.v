@@ -275,6 +275,17 @@ module cpu(input clk,
 
    assign exe_result = exe_result_i;
 
+   // Q: Why does the CPU fail when this register is used as the data input
+   // for memory writes? But succeeds when it is used for ALU results?
+
+   // A: It gets updated when memory read address has already changed?
+   
+   //    Maybe the instruction type has already changed by the time write back is
+   //    called?
+
+   //    Some 
+   
+
    // Stores the result to be written back to memory   
    reg_async_reset result_storage_MEM_reg(.clk(clk),
                                           .rst(rst),
