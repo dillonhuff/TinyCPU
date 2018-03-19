@@ -10,6 +10,6 @@ module issue_register_control(
                               output issue_reg_en
                               );
 
-   assign issue_reg_en = stage == `STAGE_PC_UPDATE;
+   assign issue_reg_en = stage == `STAGE_FETCH;
    
 endmodule

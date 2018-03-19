@@ -18,7 +18,7 @@ module pc_control(input [4:0] current_instruction_type,
                   );
    
 
-   assign pc_en = stage == `STAGE_PC_UPDATE;
+   assign pc_en = stage == `STAGE_FETCH;
    
    reg [31:0]                   pc_input_i;
    always @(*) begin

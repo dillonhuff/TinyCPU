@@ -34,13 +34,9 @@ module main_memory_control(
    assign write_address = memory_write_address;
    
    always @(*) begin
-      //if (stage == `STAGE_MEMORY) begin
-      //if (stage == `STAGE_INSTR_FETCH) begin
-      if (stage == `STAGE_PC_UPDATE) begin
+      if (stage == `STAGE_FETCH) begin
          read_address_i = PC_value;
-         //read_address_i = memory_read_address;
       end else begin
-         //read_address_i = PC_value;
           read_address_i = memory_read_address;
       end
    end

@@ -157,7 +157,8 @@ module cpu(input clk,
                                        .alu_op_reg_0(alu_op_reg_0),
                                        .alu_op_reg_1(alu_op_reg_1),
                                        .alu_op_reg_res(alu_op_reg_res),
-                                       .alu_result(alu_result),
+                                       //.alu_result(alu_result),
+                                       .alu_result(write_back_register_input),
 
                                        .jump_condition_reg(jump_condition_reg),
                                        .jump_address_reg(jump_address_reg),
@@ -221,6 +222,7 @@ module cpu(input clk,
            .op_select(alu_op_select),
            .out(alu_result_reg_input));
 
+   // Execution stage result pipeline register
    reg_async_reset alu_result_reg(.clk(clk),
                                   .rst(rst),
                                   .en(1'b1),
@@ -258,6 +260,35 @@ module cpu(input clk,
                                         .write_enable(main_mem_wen),
                                         .clk(clk));
 
+   wire [31:0] write_back_register_input;
+   wire [31:0] exe_result;
+
+   reg [31:0]  exe_result_i;
+   
+   always @(*) begin
+      if (current_instruction_type == `INSTR_LOAD) begin
+         exe_result_i = read_data;
+      end else begin
+         exe_result_i = alu_result;
+      end
+   end
+
+   assign exe_result = exe_result_i;
+   
+   reg_async_reset result_storage_MEM_reg(.clk(clk),
+                                          .rst(rst),
+                                          .en(1'b1),
+                                          .D(exe_result),
+                                          .Q(write_back_register_input));
+   
    // Insert a write back register here
+
+   // wire [31:0] write_back_register_output;
+   // reg_async_reset write_back_register(.clk(clk),
+   //                                     .rst(rst),
+   //                                     .en(1'b1),
+   //                                     .D(write_back_register_input),
+   //                                     .Q(write_back_register_output));
+   
    
 endmodule

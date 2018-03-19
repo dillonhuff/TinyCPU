@@ -8,8 +8,8 @@
 //    in to two stages. That way I can follow the more classical model that most
 //    architecture papers seem to work from.
 
-`define STAGE_PC_UPDATE 0
-`define STAGE_REGISTER_READ 1
+`define STAGE_FETCH 0
+`define STAGE_DECODE 1
 `define STAGE_EXECUTE 2
 `define STAGE_MEMORY 3
 `define STAGE_REGISTER_UPDATE 4
