@@ -148,7 +148,7 @@ module cpu(input clk,
                                        .load_imm_data(load_imm_data),
 
                                        .load_mem_reg(load_mem_reg),
-                                       .load_mem_data(read_data),
+                                       .load_mem_data(write_back_register_input), //read_data),
                                        .load_mem_addr_reg(load_mem_addr_reg),
 
                                        .store_addr_reg(store_addr_reg),
