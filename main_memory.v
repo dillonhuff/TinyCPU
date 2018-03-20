@@ -16,6 +16,8 @@ module main_memory(
 
    always @(posedge clk) begin
 
+      $display("Reading from memory location %d", read_address);
+
       if (write_enable) begin
          $display("Writing %b to memory address %b", write_data, write_address);
          mem[write_address] <= write_data;
