@@ -266,27 +266,6 @@ module cpu(input clk,
    wire [31:0] write_back_register_input;
    wire [31:0] exe_result;
 
-   // reg [31:0]  exe_result_i;
-   
-   // always @(*) begin
-   //    if (current_instruction_type == `INSTR_LOAD) begin
-   //       exe_result_i = read_data;
-   //    end else begin
-   //       exe_result_i = alu_result;
-   //    end
-   // end
-
-   // assign exe_result = exe_result_i;
-
-
-   // Turns out the problem was leaving read_reg_0_i undefined
-   // until stage_memory. I guess that was a problem because
-   // exe_result is set combinationally? 
-   // So the sequence of events was:
-   //   * Mem stage looks up value and exe_result is set to read_data
-   //   * Then write back stage clock arrives, exe_result is set to
-   //     to an undefined value?
-
    mem_result_control mem_res_control(.instr_type(current_instruction_type),
                                       .read_data(read_data),
                                       .alu_result(alu_result),
