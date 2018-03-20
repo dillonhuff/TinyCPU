@@ -72,6 +72,7 @@ module cpu(input clk,
 
    always @(posedge clk or negedge rst) begin
       $display("Instruction being issued = %b", issue_register.Q);
+      assert(0);
       // $display("Value of immediate = %b", load_imm_data);
       // $display("Value of PC_input = %d", PC_input);
       // $display("Stage # %d", current_stage);
