@@ -6,11 +6,11 @@
 module cpu_pipelined_basic(input clk,
                            input rst
                                  
-                           // Debug info probes
+                                 // Debug info probes
 `ifdef DEBUG_ON
-                           , output [31:0] PC_value
-                           , output [31:0] mem_read_data
-                           , output [4:0] current_instruction_type_dbg
+                                 , output [31:0] PC_value
+                                 , output [31:0] mem_read_data
+                                 , output [4:0] current_instruction_type_dbg
 `endif // DEBUG_ON
                            );
 
@@ -23,24 +23,7 @@ module cpu_pipelined_basic(input clk,
    assign current_instruction_type_dbg = current_instruction_type;
 `endif // DEBUG_ON
 
-   wire [2:0]       current_stage;
-
-
-   always @(posedge clk) begin
-      $display("Instruction being issued = %b", issue_register.Q);
-      $display("Write back stage instr = %b", write_back_stage_instr);
-      $display("alu_op_result_register = %d", alu_op_result_register);
-      $display("Value of immediate = %b", load_imm_data);
-      $display("Stage # %d", current_stage);
-      $display("ALU result = %d", alu_result);
-      $display("alu_in0    = %d", alu_in0);
-      $display("alu_in1    = %d", alu_in1);
-      $display("alu_op     = %d", alu_op_select);
-   end
-
-   // Register to WB results to
-   wire [4:0]  alu_op_result_register;
-   
+   wire `STAGE_WIDTH current_stage;
 
    // Stage counter
    counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),
@@ -50,17 +33,33 @@ module cpu_pipelined_basic(input clk,
    wire             is_stage_instr_fetch;
    wire             is_stage_PC_update;
 
-   // STAGE Program counter update
+   // Program counter
+   wire [31:0] PC_input;
    wire [31:0] PC_output;
-   stage_pc_update pc_update(.clk(clk),
-                             .rst(rst),
-                             .current_instruction_type(current_instruction_type),
-                             .current_stage(current_stage),
-                             .read_data_0(read_data_0),
-                             .read_data_1(read_data_1),
-                             .PC_output(PC_output));
-   
-   // STAGE Instruction decode
+
+   wire [31:0] PC_increment_result;
+   assign PC_increment_result = PC_output + 32'h1;
+
+   wire        PC_en;
+
+   pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
+                      .alu_result(PC_increment_result),
+                      .jump_condition(read_data_0),
+                      .jump_address(read_data_1),
+                      .stage(current_stage),
+
+                      // To PC
+                      .pc_input(PC_input),
+                      .pc_en(PC_en));
+
+   // The PC is the pipeline register for this stage   
+   reg_async_reset #(.width(32)) PC(.clk(clk),
+                                    .rst(rst),
+                                    .en(PC_en),
+                                    .D(PC_input),
+                                    .Q(PC_output));
+
+   // Instruction decode
    wire             issue_reg_en;
    
    issue_register_control issue_reg_control(.stage(current_stage),
@@ -71,6 +70,18 @@ module cpu_pipelined_basic(input clk,
                                                 .en(issue_reg_en),
                                                 .D(read_data),
                                                 .Q(current_instruction));
+
+   always @(posedge clk or negedge rst) begin
+      $display("Instruction being issued = %b", issue_register.Q);
+
+      // $display("Value of immediate = %b", load_imm_data);
+      // $display("Value of PC_input = %d", PC_input);
+      // $display("Stage # %d", current_stage);
+      // $display("ALU result = %d", alu_result);
+      // $display("alu_in0    = %d", alu_in0);
+      // $display("alu_in1    = %d", alu_in1);
+      // $display("alu_op     = %d", alu_op_select);
+   end
 
    wire [31:0] current_instruction;
    wire [4:0] current_instruction_type;
@@ -117,6 +128,7 @@ module cpu_pipelined_basic(input clk,
                               );
    
 
+   // Register file
    wire [4:0] read_reg_0;
    wire [4:0] read_reg_1;
    wire [4:0] write_reg;
@@ -138,7 +150,7 @@ module cpu_pipelined_basic(input clk,
                                        .load_imm_data(load_imm_data),
 
                                        .load_mem_reg(load_mem_reg),
-                                       .load_mem_data(read_data),
+                                       .load_mem_data(write_back_register_input), //read_data),
                                        .load_mem_addr_reg(load_mem_addr_reg),
 
                                        .store_addr_reg(store_addr_reg),
@@ -146,9 +158,9 @@ module cpu_pipelined_basic(input clk,
 
                                        .alu_op_reg_0(alu_op_reg_0),
                                        .alu_op_reg_1(alu_op_reg_1),
-                                       .alu_op_reg_res(alu_op_result_register),
-                                       //.alu_op_reg_res(alu_op_reg_res),
-                                       .alu_result(alu_result),
+                                       .alu_op_reg_res(alu_op_reg_res),
+                                       //.alu_result(alu_result),
+                                       .alu_result(write_back_register_input),
 
                                        .jump_condition_reg(jump_condition_reg),
                                        .jump_address_reg(jump_address_reg),
@@ -174,7 +186,8 @@ module cpu_pipelined_basic(input clk,
                           .write_enable(reg_file_write_en),
                           .clk(clk));
 
-   
+
+   // Pipeline registers for the operation fetch stage
    reg_async_reset reg_file_data_0_r(.clk(clk),
                                      .rst(rst),
                                      .en(1'b1),
@@ -187,26 +200,15 @@ module cpu_pipelined_basic(input clk,
                                      .D(reg_file_data_1),
                                      .Q(read_data_1));
    
-   
-   // STAGE Execute
-
-   // The instruction currently in the execute stage
-   reg_async_reset execute_stage_instr_reg(.clk(clk),
-                                           .rst(rst),
-                                           .en(1'b1),
-                                           .D(current_instruction),
-                                           .Q(execute_stage_instr));
-   
-   
+   // Arithmetic logic unit
+   wire [31:0] alu_result_reg_input;
    wire [31:0] alu_result;
 
    wire [31:0] alu_in0;
    wire [31:0] alu_in1;
    wire [4:0]  alu_op_select;
-
-   wire [31:0] execute_stage_instr;
-   wire [31:0] memory_stage_instr;
-
+   
+   
    alu_control alu_ctrl(.alu_operation(alu_operation),
 
                         .reg_value_0(read_data_0),
@@ -221,15 +223,16 @@ module cpu_pipelined_basic(input clk,
    alu ALU(.in0(alu_in0),
            .in1(alu_in1),
            .op_select(alu_op_select),
-           .out(alu_result));
+           .out(alu_result_reg_input));
 
-   // STAGE Memory
-   reg_async_reset memory_stage_instr_reg(.clk(clk),
-                                          .rst(rst),
-                                          .en(1'b1),
-                                          .D(execute_stage_instr),
-                                          .Q(memory_stage_instr));
-   
+   // Execution stage result pipeline register
+   reg_async_reset alu_result_reg(.clk(clk),
+                                  .rst(rst),
+                                  .en(1'b1),
+                                  .D(alu_result_reg_input),
+                                  .Q(alu_result));
+
+   // Main memory
    wire [31:0] main_mem_raddr;
    wire [31:0] main_mem_waddr;
    wire [31:0] main_mem_wdata;
@@ -260,14 +263,21 @@ module cpu_pipelined_basic(input clk,
                                         .write_enable(main_mem_wen),
                                         .clk(clk));
 
-   // STAGE Write back
-   wire [31:0] write_back_stage_instr;
-   reg_async_reset write_back_stage_instr_reg(.clk(clk),
-                                              .rst(rst),
-                                              .en(1'b1),
-                                              .D(memory_stage_instr),
-                                              .Q(write_back_stage_instr));
+   wire [31:0] write_back_register_input;
+   wire [31:0] exe_result;
 
-   assign alu_op_result_register = write_back_stage_instr[16:12];
+   mem_result_control mem_res_control(.instr_type(current_instruction_type),
+                                      .read_data(read_data),
+                                      .alu_result(alu_result),
+                                      .exe_result(exe_result));
+   
+
+   
+   // Stores the result to be written back to memory   
+   reg_async_reset result_storage_MEM_reg(.clk(clk),
+                                          .rst(rst),
+                                          .en(1'b1),
+                                          .D(exe_result),
+                                          .Q(write_back_register_input));
    
 endmodule

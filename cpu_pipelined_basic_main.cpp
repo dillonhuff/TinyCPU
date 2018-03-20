@@ -84,9 +84,9 @@ void test_increment_loop(const int argc, char** argv) {
   // Startup cycles + (N_STAGES*loop_length*K)
   int K = 3;
   int N_STAGES = 5;
-  int startup_cycles = 5;
+  int startup_instructions = 5;
   int loop_length = 8; // TODO: Set correctly
-  int n_cycles = startup_cycles + N_STAGES*loop_length*K;
+  int n_cycles = N_STAGES*(startup_instructions + loop_length*K);
   for (int i = 0; i < n_cycles; i++) {
 
     HIGH_CLOCK(top);
