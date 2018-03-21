@@ -282,7 +282,6 @@ module cpu_pipelined_basic(input clk,
    wire [31:0] exe_result;
 
    mem_result_control mem_res_control(.instr_type(current_instruction_type),
-                                      // TODO: Change to main_mem_read_data_1
                                       .read_data(main_mem_read_data_1),
                                       .alu_result(alu_result),
                                       .exe_result(exe_result));
