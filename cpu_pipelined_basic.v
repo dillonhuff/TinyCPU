@@ -31,9 +31,11 @@ module cpu_pipelined_basic(input clk,
                                             .rst(rst),
                                             .out(current_stage));
 
-   wire             is_stage_instr_fetch;
-   wire             is_stage_PC_update;
-
+   // Stall logic
+   wire stall;
+   assign stall = 1'b0;
+   
+   // Stage logic
    // Program counter
    wire [31:0] PC_input;
    wire [31:0] PC_output;
@@ -43,16 +45,18 @@ module cpu_pipelined_basic(input clk,
 
    wire        PC_en;
 
-   // STAGE FETCH
-   pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
-                      .alu_result(PC_increment_result),
-                      .jump_condition(read_data_0),
-                      .jump_address(read_data_1),
-                      .stage(current_stage),
 
-                      // To PC
-                      .pc_input(PC_input),
-                      .pc_en(PC_en));
+   // STAGE FETCH
+   pipelined_pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
+                                .stall(stall),
+                                .alu_result(PC_increment_result),
+                                .jump_condition(read_data_0),
+                                .jump_address(read_data_1),
+                                .stage(current_stage),
+                                
+                                // To PC
+                                .pc_input(PC_input),
+                                .pc_en(PC_en));
 
    // The PC is the pipeline register for this stage   
    reg_async_reset #(.width(32)) PC(.clk(clk),
@@ -324,10 +328,25 @@ module cpu_pipelined_basic(input clk,
 
    // DONE
    // 1. Change to dual port read memory   
-
-   // TODO:
    // 2. Insert instruction registers for execute, memory, write back phases
    //    or put another way: end of decode, end of execute and end of memory
+
+   // Now maybe I need to add the stall detector and build the logic for the
+   // stall detection system before attaching instruction register specific
+   // values to the rest of the CPU control?
+
+   // My worry is that now the CPU is effectively a CPU that stalls when
+   // an instruction is issued util that instruction leaves the pipeline and
+   // then re-starts. BUT the current CPU issues the current instruction in
+   // the issue register as the bubble instruction instead of a NO-OP.
+
+   // Maybe the way to proceed is as follows:
+   // Add a stall signal on top of the existing counter. Then add machinery
+   // to insert a NO-op into the end_decode_ireg on stalls. Then add a stall
+   // detector that stalls whenever any of the current ireg values equals
+   // the instruction in the issue register
+
+   // TODO:
    // 3. Move control logic from instructions to the stage-wise instruction
    //    registers
    // 4. Add stall detector
