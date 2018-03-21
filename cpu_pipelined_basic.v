@@ -14,12 +14,13 @@ module cpu_pipelined_basic(input clk,
 `endif // DEBUG_ON
                            );
 
+   wire [31:0] main_mem_read_data;
    /* verilator lint_off UNUSED */
-   wire [31:0] read_data;
+   wire [31:0] main_mem_read_data_1;
 
 `ifdef DEBUG_ON
    assign PC_value = PC_output;
-   assign mem_read_data = read_data;
+   assign mem_read_data = main_mem_read_data;
    assign current_instruction_type_dbg = current_instruction_type;
 `endif // DEBUG_ON
 
@@ -71,7 +72,7 @@ module cpu_pipelined_basic(input clk,
    reg_async_reset #(.width(32)) issue_register(.clk(clk),
                                                 .rst(rst),
                                                 .en(issue_reg_en),
-                                                .D(read_data),
+                                                .D(main_mem_read_data),
                                                 .Q(current_instruction));
 
    always @(posedge clk or negedge rst) begin
@@ -153,7 +154,7 @@ module cpu_pipelined_basic(input clk,
                                        .load_imm_data(load_imm_data),
 
                                        .load_mem_reg(load_mem_reg),
-                                       .load_mem_data(write_back_register_input), //read_data),
+                                       .load_mem_data(write_back_register_input),
                                        .load_mem_addr_reg(load_mem_addr_reg),
 
                                        .store_addr_reg(store_addr_reg),
@@ -262,18 +263,28 @@ module cpu_pipelined_basic(input clk,
                                      .write_enable(main_mem_wen)
                                      );
    
-   main_memory #(.depth(2048)) main_mem(.read_address(main_mem_raddr),
-                                        .read_data(read_data),
-                                        .write_address(main_mem_waddr),
-                                        .write_data(main_mem_wdata),
-                                        .write_enable(main_mem_wen),
-                                        .clk(clk));
+   // main_memory #(.depth(2048)) main_mem(.read_address(main_mem_raddr),
+   //                                      .read_data(main_mem_read_data),
+   //                                      .write_address(main_mem_waddr),
+   //                                      .write_data(main_mem_wdata),
+   //                                      .write_enable(main_mem_wen),
+   //                                      .clk(clk));
 
+   dual_port_main_memory #(.depth(2048)) main_mem(.read_address_0(main_mem_raddr),
+                                                  .read_address_1(main_mem_raddr),
+
+                                                  .read_data_0(main_mem_read_data),
+                                                  .read_data_1(main_mem_read_data_1),
+                                                  .write_address(main_mem_waddr),
+                                                  .write_data(main_mem_wdata),
+                                                  .write_enable(main_mem_wen),
+                                                  .clk(clk));
+   
    wire [31:0] write_back_register_input;
    wire [31:0] exe_result;
 
    mem_result_control mem_res_control(.instr_type(current_instruction_type),
-                                      .read_data(read_data),
+                                      .read_data(main_mem_read_data),
                                       .alu_result(alu_result),
                                       .exe_result(exe_result));
    

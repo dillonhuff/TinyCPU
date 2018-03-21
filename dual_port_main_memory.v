@@ -19,7 +19,8 @@ module dual_port_main_memory(
 
    always @(posedge clk) begin
 
-      $display("Reading from memory location %d", read_address);
+      $display("Read address 0 %d", read_address_0);
+      $display("Read address 1 %d", read_address_1);
 
       if (write_enable) begin
          $display("Writing %b to memory address %b", write_data, write_address);
