@@ -240,7 +240,7 @@ module cpu_pipelined_basic(input clk,
    // STAGE MEMORY
 
    // Main memory
-   wire [31:0] main_mem_raddr;
+   wire [31:0] main_mem_raddr_0;
    wire [31:0] main_mem_raddr_1;
 
    wire [31:0] main_mem_waddr;
@@ -259,7 +259,7 @@ module cpu_pipelined_basic(input clk,
                                                .memory_write_address(read_data_1),
       
                                                // Outputs to send to main_memory
-                                               .read_address_0(main_mem_raddr),
+                                               .read_address_0(main_mem_raddr_0),
                                                .read_address_1(main_mem_raddr_1),
 
                                                .write_address(main_mem_waddr),
@@ -267,7 +267,7 @@ module cpu_pipelined_basic(input clk,
                                                .write_enable(main_mem_wen)
                                                );
    
-   dual_port_main_memory #(.depth(2048)) main_mem(.read_address_0(main_mem_raddr),
+   dual_port_main_memory #(.depth(2048)) main_mem(.read_address_0(main_mem_raddr_0),
                                                   .read_address_1(main_mem_raddr_1),
 
                                                   .read_data_0(main_mem_read_data_0),
@@ -283,7 +283,7 @@ module cpu_pipelined_basic(input clk,
 
    mem_result_control mem_res_control(.instr_type(current_instruction_type),
                                       // TODO: Change to main_mem_read_data_1
-                                      .read_data(main_mem_read_data_0),
+                                      .read_data(main_mem_read_data_1),
                                       .alu_result(alu_result),
                                       .exe_result(exe_result));
    

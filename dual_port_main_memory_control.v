@@ -44,7 +44,8 @@ module dual_port_main_memory_control(
    end
 
    assign read_address_0 = read_address_0_i;
-   assign read_address_1 = read_address_0_i;
+   assign read_address_1 = memory_read_address;
+ //read_address_0_i;
    
    
 endmodule
