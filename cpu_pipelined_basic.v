@@ -210,6 +210,9 @@ module cpu_pipelined_basic(input clk,
                                    .en(1'b1),
                                    .D(current_instruction),
                                    .Q(decode_ireg_out));
+
+   wire [4:0]  ireg_alu_operation;
+   assign ireg_alu_operation = decode_ireg_out[11:7];
    
 
    // STAGE EXE   
@@ -222,7 +225,7 @@ module cpu_pipelined_basic(input clk,
    wire [4:0]  alu_op_select;
    
    
-   alu_control alu_ctrl(.alu_operation(alu_operation),
+   alu_control alu_ctrl(.alu_operation(ireg_alu_operation), //.alu_operation(alu_operation),
 
                         .reg_value_0(read_data_0),
                         .reg_value_1(read_data_1),
