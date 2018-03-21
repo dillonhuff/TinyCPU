@@ -42,6 +42,7 @@ module cpu_pipelined_basic(input clk,
 
    wire        PC_en;
 
+   // STAGE FETCH
    pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
                       .alu_result(PC_increment_result),
                       .jump_condition(read_data_0),
@@ -58,6 +59,8 @@ module cpu_pipelined_basic(input clk,
                                     .en(PC_en),
                                     .D(PC_input),
                                     .Q(PC_output));
+
+   // STAGE DECODE
 
    // Instruction decode
    wire             issue_reg_en;
@@ -199,7 +202,8 @@ module cpu_pipelined_basic(input clk,
                                      .en(1'b1),
                                      .D(reg_file_data_1),
                                      .Q(read_data_1));
-   
+
+   // STAGE EXE   
    // Arithmetic logic unit
    wire [31:0] alu_result_reg_input;
    wire [31:0] alu_result;
@@ -231,6 +235,8 @@ module cpu_pipelined_basic(input clk,
                                   .en(1'b1),
                                   .D(alu_result_reg_input),
                                   .Q(alu_result));
+
+   // STAGE MEMORY
 
    // Main memory
    wire [31:0] main_mem_raddr;
@@ -272,12 +278,24 @@ module cpu_pipelined_basic(input clk,
                                       .exe_result(exe_result));
    
 
-   
    // Stores the result to be written back to memory   
    reg_async_reset result_storage_MEM_reg(.clk(clk),
                                           .rst(rst),
                                           .en(1'b1),
                                           .D(exe_result),
                                           .Q(write_back_register_input));
+
+   // STAGE Write back (no logic)
+
+
+   // TODO:
+   // 1. Change to dual port read memory
+   // 2. Insert instruction registers for execute, memory, write back phases
+   //    or put another way: end of decode, end of execute and end of memory
+   // 3. Move control logic from instructions to the stage-wise instruction
+   //    registers
+   // 4. Add stall detector
+   // 5. Replace stage checking logic with stall logic
+   // 6. Remove stage counter
    
 endmodule
