@@ -204,6 +204,14 @@ module cpu_pipelined_basic(input clk,
                                      .D(reg_file_data_1),
                                      .Q(read_data_1));
 
+   wire [31:0] decode_ireg_out;
+   reg_async_reset end_decode_ireg(.clk(clk),
+                                   .rst(rst),
+                                   .en(1'b1),
+                                   .D(current_instruction),
+                                   .Q(decode_ireg_out));
+   
+
    // STAGE EXE   
    // Arithmetic logic unit
    wire [31:0] alu_result_reg_input;
@@ -237,6 +245,13 @@ module cpu_pipelined_basic(input clk,
                                   .D(alu_result_reg_input),
                                   .Q(alu_result));
 
+   wire [31:0] decode_execute_out;
+   reg_async_reset end_execute_ireg(.clk(clk),
+                                    .rst(rst),
+                                    .en(1'b1),
+                                    .D(decode_ireg_out),
+                                    .Q(decode_execute_out));
+   
    // STAGE MEMORY
 
    // Main memory
@@ -297,8 +312,10 @@ module cpu_pipelined_basic(input clk,
    // STAGE Write back (no logic)
 
 
+   // DONE
+   // 1. Change to dual port read memory   
+
    // TODO:
-   // 1. Change to dual port read memory
    // 2. Insert instruction registers for execute, memory, write back phases
    //    or put another way: end of decode, end of execute and end of memory
    // 3. Move control logic from instructions to the stage-wise instruction
