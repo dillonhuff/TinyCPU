@@ -33,7 +33,7 @@ module cpu_pipelined_basic(input clk,
 
    // Stall logic
    wire stall;
-   assign stall = 1'b0;
+   stall_detector stall_detect(.stall(stall));
    
    // Stage logic
    // Program counter
@@ -44,7 +44,6 @@ module cpu_pipelined_basic(input clk,
    assign PC_increment_result = PC_output + 32'h1;
 
    wire        PC_en;
-
 
    // STAGE FETCH
    pipelined_pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
@@ -208,11 +207,15 @@ module cpu_pipelined_basic(input clk,
                                      .D(reg_file_data_1),
                                      .Q(read_data_1));
 
+   wire [31:0] decode_ireg_input;
+   // Next instruction is a NO-op
+   assign decode_ireg_input = stall ? 32'h0 : current_instruction;
+
    wire [31:0] decode_ireg_out;
    reg_async_reset end_decode_ireg(.clk(clk),
                                    .rst(rst),
                                    .en(1'b1),
-                                   .D(current_instruction),
+                                   .D(decode_ireg_input),
                                    .Q(decode_ireg_out));
 
    wire [4:0]  ireg_alu_operation;
