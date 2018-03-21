@@ -245,12 +245,12 @@ module cpu_pipelined_basic(input clk,
                                   .D(alu_result_reg_input),
                                   .Q(alu_result));
 
-   wire [31:0] decode_execute_out;
+   wire [31:0] execute_ireg_out;
    reg_async_reset end_execute_ireg(.clk(clk),
                                     .rst(rst),
                                     .en(1'b1),
                                     .D(decode_ireg_out),
-                                    .Q(decode_execute_out));
+                                    .Q(execute_ireg_out));
    
    // STAGE MEMORY
 
@@ -309,6 +309,13 @@ module cpu_pipelined_basic(input clk,
                                           .D(exe_result),
                                           .Q(write_back_register_input));
 
+   wire [31:0] memory_ireg_out;
+   reg_async_reset end_memory_ireg(.clk(clk),
+                                   .rst(rst),
+                                   .en(1'b1),
+                                   .D(execute_ireg_out),
+                                   .Q(memory_ireg_out));
+   
    // STAGE Write back (no logic)
 
 
