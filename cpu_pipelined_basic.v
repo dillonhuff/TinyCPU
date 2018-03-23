@@ -272,10 +272,14 @@ module cpu_pipelined_basic(input clk,
    wire [31:0] main_mem_wdata;
    wire        main_mem_wen;
 
+   wire [4:0]     ireg_out_instr_type;
+   assign ireg_out_instr_type = execute_ireg_out[31:27];
+
    dual_port_main_memory_control main_mem_ctrl(
                                                // Inputs to select from
                                                .stage(current_stage),
-                                               .current_instr_type(current_instruction_type),
+                                               .current_instr_type(ireg_out_instr_type),
+                                               //.current_instr_type(current_instruction_type),
                                                .PC_value(PC_output),
 
                                                .memory_read_address(read_data_0),

@@ -100,8 +100,53 @@ void test_increment_loop(const int argc, char** argv) {
   top->final();
 }
 
+void load_load_store_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
+
+  // Set all memory to be no-ops
+  for (int i = 0; i < mem_depth; i++) {
+    uint32_t no_op = tiny_CPU_no_op();
+    top->MEM[i] = no_op;
+  }
+
+  top->MEM[0] = tiny_CPU_load_immediate(5, 0);
+  top->MEM[1] = tiny_CPU_load_immediate(1000, 1);
+  top->MEM[2] = tiny_CPU_store(0, 1); // mem[1000] = 5
+}
+
+void test_load_store_program(const int argc, char** argv) {
+  cout << "Testing load immediate then storing it back" << endl;
+
+  Vcpu_pipelined_basic* top = new Vcpu_pipelined_basic();
+
+  load_load_store_program(2048, top);
+
+  RESET(top);
+  HIGH_CLOCK(top);
+
+  // First instruction is load_immediate
+  cout << "Current instruction type = " << (int) top->current_instruction_type_dbg << endl;
+  assert(top->current_instruction_type_dbg == TINY_CPU_INSTRUCTION_LOAD_IMMEDIATE);
+
+  HIGH_CLOCK(top);
+  
+  int n_cycles = 40;
+  // Q: How many cycles are needed to increment 2 times?
+  for (int i = 0; i < n_cycles; i++) {
+
+    HIGH_CLOCK(top);
+
+    cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
+  }
+
+  cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
+  assert(top->MEM[1000] == 5);
+
+  top->final();
+}
+
 int main(const int argc, char** argv) {
   test_neq_alu(argc, argv);
+  test_load_store_program(argc, argv);
   test_increment_loop(argc, argv);
 
   cout << "$$$$ CPU Pipelined Basic tests passed" << endl;

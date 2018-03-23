@@ -23,8 +23,6 @@ module decoder(
                output [4:0] jump_address_reg
                );
    
-   
-
    assign instruction_type = instruction[31:27];
 
    assign store_data_reg = instruction[26:22];
