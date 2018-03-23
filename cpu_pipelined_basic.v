@@ -30,10 +30,19 @@ module cpu_pipelined_basic(input clk,
    counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),
                                             .rst(rst),
                                             .out(current_stage));
+   
 
    // Stall logic
    wire stall;
-   stall_detector stall_detect(.stall(stall));
+   
+   stall_detector
+     stall_detect(.stall(stall),
+                  .issue_reg_output(current_instruction),
+                  .decode_stage_instruction(decode_ireg_out),
+                  .execute_stage_instruction(execute_ireg_out),
+                  .memory_stage_instruction(memory_ireg_out)
+                  );
+   
    
    // Stage logic
    // Program counter
@@ -332,10 +341,16 @@ module cpu_pipelined_basic(input clk,
    
    // STAGE Write back (no logic)
 
+   // Maybe good stall logic to emulate single cycle would be:
+   // stall if the issue register is not a no-op and one of the instruction
+   // registers after issue register is equal to the issue register value
+
    // DONE
    // 1. Change to dual port read memory   
    // 2. Insert instruction registers for execute, memory, write back phases
    //    or put another way: end of decode, end of execute and end of memory
+   // 3. Move control logic from instructions to the stage-wise instruction
+   //    registers   
 
    // Now maybe I need to add the stall detector and build the logic for the
    // stall detection system before attaching instruction register specific
@@ -353,8 +368,7 @@ module cpu_pipelined_basic(input clk,
    // the instruction in the issue register
 
    // TODO:
-   // 3. Move control logic from instructions to the stage-wise instruction
-   //    registers
+
    // 4. Add stall detector
    // 5. Replace stage checking logic with stall logic
    // 6. Remove stage counter
