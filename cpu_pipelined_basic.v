@@ -104,6 +104,7 @@ module cpu_pipelined_basic(input clk,
    wire [4:0]  alu_op_reg_0;
    wire [4:0] alu_op_reg_1;
    wire [4:0] alu_op_reg_res;
+   wire [4:0] alu_op_reg_res_wb;
    wire [4:0] alu_operation;
 
    wire [4:0] store_data_reg;
@@ -112,27 +113,27 @@ module cpu_pipelined_basic(input clk,
    wire [4:0] jump_condition_reg;
    wire [4:0] jump_address_reg;
    
-   decoder instruction_decode(.instruction(current_instruction),
+   basic_pipeline_decoder
+     instruction_decode(.instruction(current_instruction),
 
-                              // Outputs
-                              .instruction_type(current_instruction_type),
-                              .load_imm_reg(load_imm_reg),
-                              .load_imm_data(load_imm_data),
+                        // Outputs
+                        .instruction_type(current_instruction_type),
+                        .load_imm_reg(load_imm_reg),
+                        .load_imm_data(load_imm_data),
 
-                              .load_mem_addr_reg(load_mem_addr_reg),
-                              .load_mem_reg(load_mem_reg),
+                        .load_mem_addr_reg(load_mem_addr_reg),
+                        .load_mem_reg(load_mem_reg),
 
-                              .store_data_reg(store_data_reg),
-                              .store_addr_reg(store_addr_reg),
+                        .store_data_reg(store_data_reg),
+                        .store_addr_reg(store_addr_reg),
 
-                              .alu_op_reg_0(alu_op_reg_0),
-                              .alu_op_reg_1(alu_op_reg_1),
-                              .alu_op_reg_res(alu_op_reg_res),
-                              .alu_operation(alu_operation),
+                        .alu_op_reg_0(alu_op_reg_0),
+                        .alu_op_reg_1(alu_op_reg_1),
+                        .alu_operation(alu_operation),
 
-                              .jump_condition_reg(jump_condition_reg),
-                              .jump_address_reg(jump_address_reg)
-                              );
+                        .jump_condition_reg(jump_condition_reg),
+                        .jump_address_reg(jump_address_reg)
+                        );
    
 
    // Register file
@@ -165,8 +166,7 @@ module cpu_pipelined_basic(input clk,
 
                                        .alu_op_reg_0(alu_op_reg_0),
                                        .alu_op_reg_1(alu_op_reg_1),
-                                       .alu_op_reg_res(alu_op_reg_res),
-                                       //.alu_result(alu_result),
+                                       .alu_op_reg_res(alu_op_reg_res_wb),
                                        .alu_result(write_back_register_input),
 
                                        .jump_condition_reg(jump_condition_reg),
@@ -279,7 +279,6 @@ module cpu_pipelined_basic(input clk,
                                                // Inputs to select from
                                                .stage(current_stage),
                                                .current_instr_type(ireg_out_instr_type),
-                                               //.current_instr_type(current_instruction_type),
                                                .PC_value(PC_output),
 
                                                .memory_read_address(read_data_0),
@@ -310,11 +309,10 @@ module cpu_pipelined_basic(input clk,
    wire [31:0] write_back_register_input;
    wire [31:0] exe_result;
 
-   mem_result_control mem_res_control(.instr_type(current_instruction_type),
+   mem_result_control mem_res_control(.instr_type(ireg_out_instr_type),
                                       .read_data(main_mem_read_data_1),
                                       .alu_result(alu_result),
                                       .exe_result(exe_result));
-   
 
    // Stores the result to be written back to memory   
    reg_async_reset result_storage_MEM_reg(.clk(clk),
@@ -329,9 +327,10 @@ module cpu_pipelined_basic(input clk,
                                    .en(1'b1),
                                    .D(execute_ireg_out),
                                    .Q(memory_ireg_out));
+
+   assign alu_op_reg_res_wb = memory_ireg_out[16:12];
    
    // STAGE Write back (no logic)
-
 
    // DONE
    // 1. Change to dual port read memory   

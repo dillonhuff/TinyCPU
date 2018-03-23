@@ -27,6 +27,7 @@ module dual_port_main_memory_control(
    assign current_instr_is_store = current_instr_type == `INSTR_STORE;
    
    assign write_enable = (stage == `STAGE_MEMORY) && current_instr_is_store;
+   assign write_enable = current_instr_is_store;
 
    assign write_data = memory_write_data;
    assign write_address = memory_write_address;
