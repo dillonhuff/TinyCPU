@@ -14,6 +14,5 @@ module stall_detector(output [0:0] stall,
    
 
    assign stall = !issue_reg_holds_no_op && issue_reg_instr_in_pipe;
-//1'b0;
 
 endmodule

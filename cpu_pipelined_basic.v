@@ -352,6 +352,7 @@ module cpu_pipelined_basic(input clk,
    //    or put another way: end of decode, end of execute and end of memory
    // 3. Move control logic from instructions to the stage-wise instruction
    //    registers   
+   // 4. Add stall detector
 
    // Now maybe I need to add the stall detector and build the logic for the
    // stall detection system before attaching instruction register specific
@@ -362,16 +363,19 @@ module cpu_pipelined_basic(input clk,
    // then re-starts. BUT the current CPU issues the current instruction in
    // the issue register as the bubble instruction instead of a NO-OP.
 
-   // Maybe the way to proceed is as follows:
-   // Add a stall signal on top of the existing counter. Then add machinery
-   // to insert a NO-op into the end_decode_ireg on stalls. Then add a stall
-   // detector that stalls whenever any of the current ireg values equals
-   // the instruction in the issue register
+   // Now: Stall logic looks ok, but I get a stall 2 cycles after
+
+   // I still dont have great intuition about how cycles happen and when
+   // things change over time
+
+   // before clock 0 : issue reg is 0, stall is 0, PC = 0
+   // after clock 0  : issue reg is MEM[0], stall is 0, PC = 1
+   // after clock 1  : issue reg is MEM[1], stall is 1, PC = ??
 
    // TODO:
 
-   // 4. Add stall detector
    // 5. Replace stage checking logic with stall logic
    // 6. Remove stage counter
+
    
 endmodule
