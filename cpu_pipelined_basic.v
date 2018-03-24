@@ -159,35 +159,37 @@ module cpu_pipelined_basic(input clk,
    
    wire        reg_file_write_en;
    
-   register_file_control reg_file_ctrl(
-                                       // Control info
-                                       .stage(current_stage),
-                                       .current_instruction_type(current_instruction_type),
+   pipelined_basic_register_file_control
+     reg_file_ctrl(
+                   // Control info
+                   .stage(current_stage),
+                   .decode_instruction_type(current_instruction_type),
+                   .write_back_instruction_type(wb_instruction_type),
 
-                                       .load_imm_reg(load_imm_reg),
-                                       .load_imm_data(load_imm_data),
+                   .load_imm_reg(load_imm_reg),
+                   .load_imm_data(load_imm_data),
 
-                                       .load_mem_reg(load_mem_reg),
-                                       .load_mem_data(write_back_register_input),
-                                       .load_mem_addr_reg(load_mem_addr_reg),
+                   .load_mem_reg(load_mem_reg),
+                   .load_mem_data(write_back_register_input),
+                   .load_mem_addr_reg(load_mem_addr_reg),
 
-                                       .store_addr_reg(store_addr_reg),
-                                       .store_data_reg(store_data_reg),
+                   .store_addr_reg(store_addr_reg),
+                   .store_data_reg(store_data_reg),
 
-                                       .alu_op_reg_0(alu_op_reg_0),
-                                       .alu_op_reg_1(alu_op_reg_1),
-                                       .alu_op_reg_res(alu_op_reg_res_wb),
-                                       .alu_result(write_back_register_input),
+                   .alu_op_reg_0(alu_op_reg_0),
+                   .alu_op_reg_1(alu_op_reg_1),
+                   .alu_op_reg_res(alu_op_reg_res_wb),
+                   .alu_result(write_back_register_input),
 
-                                       .jump_condition_reg(jump_condition_reg),
-                                       .jump_address_reg(jump_address_reg),
+                   .jump_condition_reg(jump_condition_reg),
+                   .jump_address_reg(jump_address_reg),
 
-                                       // Inputs to the register file
-                                       .write_address(write_reg),
-                                       .write_data(reg_file_write_data),
-                                       .write_enable(reg_file_write_en),
-                                       .read_reg_0(read_reg_0),
-                                       .read_reg_1(read_reg_1));
+                   // Inputs to the register file
+                   .write_address(write_reg),
+                   .write_data(reg_file_write_data),
+                   .write_enable(reg_file_write_en),
+                   .read_reg_0(read_reg_0),
+                   .read_reg_1(read_reg_1));
 
    wire [31:0] reg_file_data_0;
    wire [31:0] reg_file_data_1;
@@ -332,12 +334,14 @@ module cpu_pipelined_basic(input clk,
                                           .Q(write_back_register_input));
 
    wire [31:0] memory_ireg_out;
+   wire [4:0] wb_instruction_type;
    reg_async_reset end_memory_ireg(.clk(clk),
                                    .rst(rst),
                                    .en(1'b1),
                                    .D(execute_ireg_out),
                                    .Q(memory_ireg_out));
 
+   assign wb_instruction_type = memory_ireg_out[31:27];
    assign alu_op_reg_res_wb = memory_ireg_out[16:12];
    
    // STAGE Write back (no logic)
