@@ -3,7 +3,7 @@
 `include "arch_defines.v"
 `endif // ARCH_DEFINES
 
-module pipelined_basic_register_file_control(//input         `STAGE_WIDTH stage,
+module pipelined_basic_register_file_control(
                                              input [4:0]   decode_instruction_type,
                                              /* verilator lint_off UNUSED */
                                              input [4:0]   write_back_instruction_type,
