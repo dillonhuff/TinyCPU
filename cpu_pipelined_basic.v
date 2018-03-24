@@ -162,7 +162,7 @@ module cpu_pipelined_basic(input clk,
    pipelined_basic_register_file_control
      reg_file_ctrl(
                    // Control info
-                   .stage(current_stage),
+                   //.stage(current_stage),
                    .decode_instruction_type(current_instruction_type),
                    .write_back_instruction_type(wb_instruction_type),
 

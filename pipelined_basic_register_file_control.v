@@ -3,7 +3,7 @@
 `include "arch_defines.v"
 `endif // ARCH_DEFINES
 
-module pipelined_basic_register_file_control(input         `STAGE_WIDTH stage,
+module pipelined_basic_register_file_control(//input         `STAGE_WIDTH stage,
                                              input [4:0]   decode_instruction_type,
                                              /* verilator lint_off UNUSED */
                                              input [4:0]   write_back_instruction_type,
@@ -132,7 +132,8 @@ module pipelined_basic_register_file_control(input         `STAGE_WIDTH stage,
 
    assign write_address = write_address_i;
    assign write_data = write_data_i;
-   assign write_enable = (stage == `STAGE_REGISTER_UPDATE) && wb_instr_updates_reg_file;
+   //assign write_enable = (stage == `STAGE_REGISTER_UPDATE) && wb_instr_updates_reg_file;
+   assign write_enable = wb_instr_updates_reg_file;
    
    
 
