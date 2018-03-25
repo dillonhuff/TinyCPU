@@ -145,8 +145,8 @@ void test_load_store_program(const int argc, char** argv) {
 }
 
 int main(const int argc, char** argv) {
-  test_neq_alu(argc, argv);
   test_load_store_program(argc, argv);
+  test_neq_alu(argc, argv);
   test_increment_loop(argc, argv);
 
   cout << "$$$$ CPU Pipelined Basic tests passed" << endl;

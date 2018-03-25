@@ -10,7 +10,7 @@ module pipelined_pc_control(input [4:0] current_instruction_type,
                             input [31:0]  jump_condition,
                             input [31:0]  jump_address,
 
-                            input         `STAGE_WIDTH stage,
+                            //input         `STAGE_WIDTH stage,
 
 
                             // Outputs to PC input
@@ -19,7 +19,8 @@ module pipelined_pc_control(input [4:0] current_instruction_type,
                   );
    
 
-   assign pc_en = !stall && (stage == `STAGE_FETCH);
+   assign pc_en = !stall;
+ // && (stage == `STAGE_FETCH);
    
    reg [31:0]                   pc_input_i;
    always @(*) begin

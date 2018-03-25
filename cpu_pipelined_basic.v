@@ -24,12 +24,12 @@ module cpu_pipelined_basic(input clk,
    assign current_instruction_type_dbg = current_instruction_type;
 `endif // DEBUG_ON
 
-   wire `STAGE_WIDTH current_stage;
+   //wire `STAGE_WIDTH current_stage;
 
-   // Stage counter
-   counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),
-                                            .rst(rst),
-                                            .out(current_stage));
+   // // Stage counter
+   // counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),
+   //                                          .rst(rst),
+   //                                          .out(current_stage));
    
 
    // Stall logic
@@ -60,7 +60,7 @@ module cpu_pipelined_basic(input clk,
                                 .alu_result(PC_increment_result),
                                 .jump_condition(read_data_0),
                                 .jump_address(read_data_1),
-                                .stage(current_stage),
+                                //.stage(current_stage),
                                 
                                 // To PC
                                 .pc_input(PC_input),
@@ -78,7 +78,7 @@ module cpu_pipelined_basic(input clk,
    // Instruction decode
    wire             issue_reg_en;
    
-   issue_register_control issue_reg_control(.stage(current_stage),
+   issue_register_control issue_reg_control(//.stage(current_stage),
                                             .stall(stall),
                                             .issue_reg_en(issue_reg_en));
    
@@ -89,9 +89,11 @@ module cpu_pipelined_basic(input clk,
                                                 .Q(current_instruction));
 
    always @(posedge clk or negedge rst) begin
-      $display("Instruction being issued = %b", issue_register.Q);
-      $display("decode_ireg_out          = %b", decode_ireg_out);
-      $display("stall                    = %d", stall);
+      $display("Instruction being issued  = %b", issue_register.Q);
+      $display("decode_ireg_out           = %b", decode_ireg_out);
+      $display("execute_ireg_out          = %b", execute_ireg_out);
+      $display("memory_ireg_out           = %b", memory_ireg_out);
+      $display("stall                     = %d", stall);
 
       // $display("Value of immediate = %b", load_imm_data);
       // $display("Value of PC_input = %d", PC_input);
@@ -167,13 +169,19 @@ module cpu_pipelined_basic(input clk,
                    .decode_instruction_type(current_instruction_type),
                    .write_back_instruction_type(wb_instruction_type),
 
-                   .load_imm_reg(load_imm_reg),
-                   .load_imm_data(load_imm_data),
+                   //.load_imm_reg(load_imm_reg),
+                   //.load_imm_data(load_imm_data),
 
-                   .load_mem_reg(load_mem_reg),
+                   .load_imm_reg(write_back_load_imm_reg),
+                   .load_imm_data(write_back_load_imm_data),
+
+                   //.load_mem_reg(load_mem_reg),
+
+                   .load_mem_reg(write_back_load_mem_reg),
                    .load_mem_data(write_back_register_input),
                    .load_mem_addr_reg(load_mem_addr_reg),
 
+                   // These should come from the write back register
                    .store_addr_reg(store_addr_reg),
                    .store_data_reg(store_data_reg),
 
@@ -290,7 +298,7 @@ module cpu_pipelined_basic(input clk,
 
    dual_port_main_memory_control main_mem_ctrl(
                                                // Inputs to select from
-                                               .stage(current_stage),
+                                               //.stage(current_stage),
                                                .current_instr_type(ireg_out_instr_type),
                                                .PC_value(PC_output),
 
@@ -320,6 +328,10 @@ module cpu_pipelined_basic(input clk,
                                                   .clk(clk));
    
    wire [31:0] write_back_register_input;
+   wire [4:0] write_back_load_mem_reg;
+   wire [4:0] write_back_load_imm_reg;
+   wire [31:0] write_back_load_imm_data;
+   
    wire [31:0] exe_result;
 
    mem_result_control mem_res_control(.instr_type(ireg_out_instr_type),
@@ -343,6 +355,10 @@ module cpu_pipelined_basic(input clk,
                                    .Q(memory_ireg_out));
 
    assign wb_instruction_type = memory_ireg_out[31:27];
+   assign write_back_load_mem_reg = memory_ireg_out[21:17];
+   assign write_back_load_imm_reg = memory_ireg_out[10:6];
+   assign write_back_load_imm_data = {{16{1'b0}}, memory_ireg_out[26:11]};
+   
    assign alu_op_reg_res_wb = memory_ireg_out[16:12];
    
    // STAGE Write back (no logic)

@@ -5,7 +5,7 @@
 
 module dual_port_main_memory_control(
 
-                                     input         `STAGE_WIDTH stage,
+                                     //input         `STAGE_WIDTH stage,
 
                                      input [4:0]   current_instr_type,
 
@@ -26,8 +26,8 @@ module dual_port_main_memory_control(
    wire                                  current_instr_is_store;
    assign current_instr_is_store = current_instr_type == `INSTR_STORE;
    
-   assign write_enable = (stage == `STAGE_MEMORY) && current_instr_is_store;
-   //assign write_enable = current_instr_is_store;
+   //assign write_enable = (stage == `STAGE_MEMORY) && current_instr_is_store;
+   assign write_enable = current_instr_is_store;
 
    assign write_data = memory_write_data;
    assign write_address = memory_write_address;
