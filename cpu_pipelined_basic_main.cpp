@@ -85,6 +85,7 @@ void load_loop_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
   top->MEM[10] = tiny_CPU_binop(TINY_CPU_NEQ, 25, 26, 27);
   top->MEM[11] = tiny_CPU_load_immediate(5, 9); // reg9 <- 5
   top->MEM[12] = tiny_CPU_jump(27, 9); // if loop count != loop bound jump to 5
+  top->MEM[13] = tiny_CPU_store(0, 1); // Just to check if jumps are being executed
 
 }
 

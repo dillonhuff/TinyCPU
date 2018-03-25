@@ -366,44 +366,4 @@ module cpu_pipelined_basic(input clk,
    
    assign alu_op_reg_res_wb = memory_ireg_out[16:12];
    
-   // STAGE Write back (no logic)
-
-   // Maybe good stall logic to emulate single cycle would be:
-   // stall if the issue register is not a no-op and one of the instruction
-   // registers after issue register is equal to the issue register value
-
-   // DONE
-   // 1. Change to dual port read memory   
-   // 2. Insert instruction registers for execute, memory, write back phases
-   //    or put another way: end of decode, end of execute and end of memory
-   // 3. Move control logic from instructions to the stage-wise instruction
-   //    registers   
-   // 4. Add stall detector
-
-   // Now maybe I need to add the stall detector and build the logic for the
-   // stall detection system before attaching instruction register specific
-   // values to the rest of the CPU control?
-
-   // My worry is that now the CPU is effectively a CPU that stalls when
-   // an instruction is issued util that instruction leaves the pipeline and
-   // then re-starts. BUT the current CPU issues the current instruction in
-   // the issue register as the bubble instruction instead of a NO-OP.
-
-   // Now: Stall logic looks ok, but I get a stall 2 cycles after
-
-   // I still dont have great intuition about how cycles happen and when
-   // things change over time
-
-   // before clock 0 : issue reg is 0, stall is 0, PC = 0
-   // after clock 0  : issue reg is MEM[0], stall is 0, PC = 1
-   // after clock 1  : issue reg is MEM[1], stall is 1, PC = ??
-
-   // TODO:
-
-   // 5. Replace stage checking logic with stall logic
-   // 6. Remove stage counter
-
-   // NOTE: Maybe I need to simultaneously remove stage dependence in memory writes
-   // and stage dependence in program counter?
-   
 endmodule
