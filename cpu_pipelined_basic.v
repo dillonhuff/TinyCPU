@@ -69,9 +69,10 @@ module cpu_pipelined_basic(input clk,
    // Instruction decode
    wire             issue_reg_en;
    
-   issue_register_control issue_reg_control(//.stage(current_stage),
-                                            .stall(stall),
-                                            .issue_reg_en(issue_reg_en));
+   pipelined_basic_issue_register_control
+     issue_reg_control(
+                       .stall(stall),
+                       .issue_reg_en(issue_reg_en));
    
    reg_async_reset #(.width(32)) issue_register(.clk(clk),
                                                 .rst(rst),
