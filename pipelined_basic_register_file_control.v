@@ -5,7 +5,6 @@
 
 module pipelined_basic_register_file_control(
                                              input [4:0]   decode_instruction_type,
-                                             /* verilator lint_off UNUSED */
                                              input [4:0]   write_back_instruction_type,
 
                                              input [4:0]   load_imm_reg,
@@ -26,7 +25,7 @@ module pipelined_basic_register_file_control(
                                              input [4:0]   jump_condition_reg,
                                              input [4:0]   jump_address_reg,
                              
-                                             // Outputs are sent to main_memory
+                                             // Outputs are sent to register_file
                                              output [4:0]  write_address,
                                              output [31:0] write_data,
                                              output        write_enable,
@@ -56,8 +55,8 @@ module pipelined_basic_register_file_control(
    wire                                    wb_is_alu_instr;
    assign wb_is_alu_instr = write_back_instruction_type == `INSTR_ALU_OP;
 
-   wire                                    wb_is_jump_instr;
-   assign wb_is_jump_instr = write_back_instruction_type == `INSTR_JUMP;
+   // wire                                    wb_is_jump_instr;
+   // assign wb_is_jump_instr = write_back_instruction_type == `INSTR_JUMP;
    
    wire                                    wb_is_load_imm_instr;
    assign wb_is_load_imm_instr = write_back_instruction_type == `INSTR_LOAD_IMMEDIATE;
@@ -65,8 +64,8 @@ module pipelined_basic_register_file_control(
    wire                                    wb_is_load_instr;
    assign wb_is_load_instr = write_back_instruction_type == `INSTR_LOAD;
 
-   wire                                    wb_is_store_instr;
-   assign wb_is_store_instr = write_back_instruction_type == `INSTR_STORE;
+   // wire                                    wb_is_store_instr;
+   // assign wb_is_store_instr = write_back_instruction_type == `INSTR_STORE;
    
    wire                                    wb_instr_updates_reg_file;
    assign wb_instr_updates_reg_file = wb_is_alu_instr || wb_is_load_imm_instr || wb_is_load_instr;

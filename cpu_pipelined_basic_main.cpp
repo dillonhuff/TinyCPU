@@ -162,7 +162,7 @@ void test_load_store_program(const int argc, char** argv) {
 }
 
 void test_multiload_store_program(const int argc, char** argv) {
-  cout << "Testing load immediate then storing it back" << endl;
+  cout << "Testing multiple loads then store back, then load" << endl;
 
   Vcpu_pipelined_basic* top = new Vcpu_pipelined_basic();
 

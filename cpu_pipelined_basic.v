@@ -24,14 +24,6 @@ module cpu_pipelined_basic(input clk,
    assign current_instruction_type_dbg = current_instruction_type;
 `endif // DEBUG_ON
 
-   //wire `STAGE_WIDTH current_stage;
-
-   // // Stage counter
-   // counter #(.N(`NUM_STAGES)) stage_counter(.clk(clk),
-   //                                          .rst(rst),
-   //                                          .out(current_stage));
-   
-
    // Stall logic
    wire stall;
    
@@ -60,7 +52,6 @@ module cpu_pipelined_basic(input clk,
                                 .alu_result(PC_increment_result),
                                 .jump_condition(read_data_0),
                                 .jump_address(read_data_1),
-                                //.stage(current_stage),
                                 
                                 // To PC
                                 .pc_input(PC_input),
@@ -93,6 +84,8 @@ module cpu_pipelined_basic(input clk,
       $display("decode_ireg_out           = %b", decode_ireg_out);
       $display("execute_ireg_out          = %b", execute_ireg_out);
       $display("memory_ireg_out           = %b", memory_ireg_out);
+      $display("read_data_0               = %d", read_data_0);
+      $display("read_data_1               = %d", read_data_1);
       $display("stall                     = %d", stall);
 
       // $display("Value of immediate = %b", load_imm_data);
@@ -278,6 +271,21 @@ module cpu_pipelined_basic(input clk,
                                     .en(1'b1),
                                     .D(decode_ireg_out),
                                     .Q(execute_ireg_out));
+
+   wire [31:0] read_data_0_exe;
+   wire [31:0] read_data_1_exe;
+   
+   reg_async_reset reg_file_data_0_e(.clk(clk),
+                                     .rst(rst),
+                                     .en(1'b1),
+                                     .D(read_data_0),
+                                     .Q(read_data_0_exe));
+
+   reg_async_reset reg_file_data_1_e(.clk(clk),
+                                     .rst(rst),
+                                     .en(1'b1),
+                                     .D(read_data_1),
+                                     .Q(read_data_1_exe));
    
    // STAGE MEMORY
 
@@ -298,10 +306,10 @@ module cpu_pipelined_basic(input clk,
                                                .current_instr_type(ireg_out_instr_type),
                                                .PC_value(PC_output),
 
-                                               .memory_read_address(read_data_0),
+                                               .memory_read_address(read_data_0_exe),
 
-                                               .memory_write_data(read_data_0),
-                                               .memory_write_address(read_data_1),
+                                               .memory_write_data(read_data_0_exe),
+                                               .memory_write_address(read_data_1_exe),
       
                                                // Outputs to send to main_memory
                                                .read_address_0(main_mem_raddr_0),
