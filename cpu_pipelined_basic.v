@@ -169,13 +169,8 @@ module cpu_pipelined_basic(input clk,
                    .decode_instruction_type(current_instruction_type),
                    .write_back_instruction_type(wb_instruction_type),
 
-                   //.load_imm_reg(load_imm_reg),
-                   //.load_imm_data(load_imm_data),
-
                    .load_imm_reg(write_back_load_imm_reg),
                    .load_imm_data(write_back_load_imm_data),
-
-                   //.load_mem_reg(load_mem_reg),
 
                    .load_mem_reg(write_back_load_mem_reg),
                    .load_mem_data(write_back_register_input),
@@ -190,6 +185,7 @@ module cpu_pipelined_basic(input clk,
                    .alu_op_reg_res(alu_op_reg_res_wb),
                    .alu_result(write_back_register_input),
 
+                   // My guess is that jump condition registers need to be updated
                    .jump_condition_reg(jump_condition_reg),
                    .jump_address_reg(jump_address_reg),
 

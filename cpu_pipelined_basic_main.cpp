@@ -78,6 +78,8 @@ void test_increment_loop(const int argc, char** argv) {
 
   load_loop_program(2048, top);
 
+  cout << "Testing increment loop" << endl;
+
   RESET(top);
 
   // Cycles needed to get to MEM[1000] = K

@@ -31,7 +31,7 @@ module dual_port_main_memory_control(
 
    assign write_data = memory_write_data;
    assign write_address = memory_write_address;
-   
+
    assign read_address_0 = PC_value;
 
    assign read_address_1 = memory_read_address;
