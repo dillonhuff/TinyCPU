@@ -79,6 +79,7 @@ module cpu_pipelined_basic(input clk,
    wire             issue_reg_en;
    
    issue_register_control issue_reg_control(.stage(current_stage),
+                                            .stall(stall),
                                             .issue_reg_en(issue_reg_en));
    
    reg_async_reset #(.width(32)) issue_register(.clk(clk),
@@ -89,6 +90,7 @@ module cpu_pipelined_basic(input clk,
 
    always @(posedge clk or negedge rst) begin
       $display("Instruction being issued = %b", issue_register.Q);
+      $display("decode_ireg_out          = %b", decode_ireg_out);
       $display("stall                    = %d", stall);
 
       // $display("Value of immediate = %b", load_imm_data);
@@ -380,5 +382,7 @@ module cpu_pipelined_basic(input clk,
    // 5. Replace stage checking logic with stall logic
    // 6. Remove stage counter
 
+   // NOTE: Maybe I need to simultaneously remove stage dependence in memory writes
+   // and stage dependence in program counter?
    
 endmodule
