@@ -234,6 +234,9 @@ module cpu_pipelined_basic(input clk,
    // STAGE EXE
    wire [31:0] execute_ireg_out;
    wire [31:0] alu_result;
+
+   wire [31:0] read_data_0_exe;
+   wire [31:0] read_data_1_exe;
    
    stage_exe execute(.clk(clk),
                      .rst(rst),
@@ -244,8 +247,8 @@ module cpu_pipelined_basic(input clk,
                      .register_a_value(read_data_0),
                      .register_b_value(read_data_1),
 
-                     .register_a_value_exe_out(register_a_value_exe),
-                     .register_b_value_exe_out(register_b_value_exe),
+                     .register_a_value_exe_out(read_data_0_exe),
+                     .register_b_value_exe_out(read_data_1_exe),
                      
                      .alu_result(alu_result));
    
@@ -286,9 +289,6 @@ module cpu_pipelined_basic(input clk,
    //                                  .D(decode_ireg_out),
    //                                  .Q(execute_ireg_out));
 
-   // wire [31:0] read_data_0_exe;
-   // wire [31:0] read_data_1_exe;
-   
    // reg_async_reset reg_file_data_0_e(.clk(clk),
    //                                   .rst(rst),
    //                                   .en(1'b1),
