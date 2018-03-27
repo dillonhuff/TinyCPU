@@ -35,6 +35,9 @@ module cpu_pipelined_basic(input clk,
                   .memory_stage_instruction(memory_ireg_out)
                   );
    
+
+   // Squash logic
+   wire squash_issue;
    
    // Stage logic
    // Program counter
@@ -54,6 +57,7 @@ module cpu_pipelined_basic(input clk,
                                 .jump_address(read_data_1),
                                 
                                 // To PC
+                                .squash_issue(squash_issue),
                                 .pc_input(PC_input),
                                 .pc_en(PC_en));
 
@@ -73,14 +77,19 @@ module cpu_pipelined_basic(input clk,
      issue_reg_control(
                        .stall(stall),
                        .issue_reg_en(issue_reg_en));
+
+   wire [31:0]      issue_register_input;
+   assign issue_register_input = squash_issue ? 32'h0 : main_mem_read_data_0;
    
    reg_async_reset #(.width(32)) issue_register(.clk(clk),
                                                 .rst(rst),
                                                 .en(issue_reg_en),
-                                                .D(main_mem_read_data_0),
+                                                //.D(main_mem_read_data_0),
+                                                .D(issue_register_input),
                                                 .Q(current_instruction));
 
    always @(posedge clk or negedge rst) begin
+
       $display("Instruction being issued  = %b", issue_register.Q);
       $display("decode_ireg_out           = %b", decode_ireg_out);
       $display("execute_ireg_out          = %b", execute_ireg_out);
@@ -89,13 +98,6 @@ module cpu_pipelined_basic(input clk,
       $display("read_data_1               = %d", read_data_1);
       $display("stall                     = %d", stall);
 
-      // $display("Value of immediate = %b", load_imm_data);
-      // $display("Value of PC_input = %d", PC_input);
-      // $display("Stage # %d", current_stage);
-      // $display("ALU result = %d", alu_result);
-      // $display("alu_in0    = %d", alu_in0);
-      // $display("alu_in1    = %d", alu_in1);
-      // $display("alu_op     = %d", alu_op_select);
    end
 
    wire [31:0] current_instruction;
