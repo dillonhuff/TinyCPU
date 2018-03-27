@@ -232,15 +232,26 @@ module cpu_pipelined_basic(input clk,
                                    .Q(decode_ireg_out));
 
    // STAGE EXE
+   wire [31:0] execute_ireg_out;
+   wire [31:0] alu_result;
+   
    stage_exe execute(.clk(clk),
                      .rst(rst),
+
                      .instruction_in(decode_ireg_out),
+                     .instruction_out(execute_ireg_out),
+
                      .register_a_value(read_data_0),
-                     .register_b_value(read_data_1));
+                     .register_b_value(read_data_1),
+
+                     .register_a_value_exe_out(register_a_value_exe),
+                     .register_b_value_exe_out(register_b_value_exe),
+                     
+                     .alu_result(alu_result));
    
    // // Arithmetic logic unit
    // wire [31:0] alu_result_reg_input;
-   // wire [31:0] alu_result;
+
 
    // wire [31:0] alu_in0;
    // wire [31:0] alu_in1;
@@ -269,7 +280,6 @@ module cpu_pipelined_basic(input clk,
    //                                .D(alu_result_reg_input),
    //                                .Q(alu_result));
 
-   // wire [31:0] execute_ireg_out;
    // reg_async_reset end_execute_ireg(.clk(clk),
    //                                  .rst(rst),
    //                                  .en(1'b1),

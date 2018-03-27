@@ -2,10 +2,15 @@ module stage_exe(input clk,
                  input        rst,
                  input [31:0] instruction_in,
                  input [31:0] register_a_value,
-                 input [31:0] register_b_value);
+                 input [31:0] register_b_value,
+
+                 output [31:0] instruction_out,
+                 output [31:0] alu_result,
+
+                 output [31:0] register_a_value_exe_out,
+                 output [31:0] register_b_value_exe_out);
 
    wire [31:0] alu_result_reg_input;
-   wire [31:0] alu_result;
 
    wire [31:0] alu_in0;
    wire [31:0] alu_in1;
@@ -38,26 +43,23 @@ module stage_exe(input clk,
                                   .D(alu_result_reg_input),
                                   .Q(alu_result));
 
-   wire [31:0] execute_ireg_out;
+   //wire [31:0] execute_ireg_out;
    reg_async_reset end_execute_ireg(.clk(clk),
                                     .rst(rst),
                                     .en(1'b1),
                                     .D(instruction_in),
-                                    .Q(execute_ireg_out));
+                                    .Q(instruction_out));
 
-   wire [31:0] register_a_value_exe;
-   wire [31:0] register_b_value_exe;
-   
    reg_async_reset reg_file_data_0_e(.clk(clk),
                                      .rst(rst),
                                      .en(1'b1),
                                      .D(register_a_value),
-                                     .Q(register_a_value_exe));
+                                     .Q(register_a_value_exe_out));
 
    reg_async_reset reg_file_data_1_e(.clk(clk),
                                      .rst(rst),
                                      .en(1'b1),
                                      .D(register_b_value),
-                                     .Q(register_b_value_exe));
+                                     .Q(register_b_value_exe_out));
 
 endmodule
