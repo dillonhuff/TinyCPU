@@ -234,46 +234,59 @@ module cpu_pipelined_basic(input clk,
    // STAGE MEMORY
 
    // Main memory
-   wire [31:0] main_mem_raddr_0;
-   wire [31:0] main_mem_raddr_1;
+   // wire [31:0] main_mem_raddr_0;
+   // wire [31:0] main_mem_raddr_1;
 
-   wire [31:0] main_mem_waddr;
-   wire [31:0] main_mem_wdata;
-   wire        main_mem_wen;
+   // wire [31:0] main_mem_waddr;
+   // wire [31:0] main_mem_wdata;
+   // wire        main_mem_wen;
 
    wire [4:0]     ireg_out_instr_type;
    assign ireg_out_instr_type = execute_ireg_out[31:27];
 
-   dual_port_main_memory_control main_mem_ctrl(
-                                               // Inputs to select from
-                                               //.stage(current_stage),
-                                               .current_instr_type(ireg_out_instr_type),
-                                               .PC_value(PC_output),
+   stage_memory memory_stage(
+                             .current_instr_type(ireg_out_instr_type),
+                             .PC_value(PC_output),
 
-                                               .memory_read_address(read_data_0_exe),
+                             .memory_read_address(read_data_0_exe),
 
-                                               .memory_write_data(read_data_0_exe),
-                                               .memory_write_address(read_data_1_exe),
-      
-                                               // Outputs to send to main_memory
-                                               .read_address_0(main_mem_raddr_0),
-                                               .read_address_1(main_mem_raddr_1),
+                             .memory_write_data(read_data_0_exe),
+                             .memory_write_address(read_data_1_exe),
 
-                                               .write_address(main_mem_waddr),
-                                               .write_data(main_mem_wdata),
-                                               .write_enable(main_mem_wen)
-                                               );
+                             .read_data_0(main_mem_read_data_0),
+                             .read_data_1(main_mem_read_data_1)
+
+                             );
    
-   dual_port_main_memory #(.depth(2048)) main_mem(.read_address_0(main_mem_raddr_0),
-                                                  .read_address_1(main_mem_raddr_1),
+   // dual_port_main_memory_control main_mem_ctrl(
+   //                                             // Inputs to select from
+   //                                             .current_instr_type(ireg_out_instr_type),
+   //                                             .PC_value(PC_output),
 
-                                                  .read_data_0(main_mem_read_data_0),
-                                                  .read_data_1(main_mem_read_data_1),
+   //                                             .memory_read_address(read_data_0_exe),
 
-                                                  .write_address(main_mem_waddr),
-                                                  .write_data(main_mem_wdata),
-                                                  .write_enable(main_mem_wen),
-                                                  .clk(clk));
+   //                                             .memory_write_data(read_data_0_exe),
+   //                                             .memory_write_address(read_data_1_exe),
+      
+   //                                             // Outputs to send to main_memory
+   //                                             .read_address_0(main_mem_raddr_0),
+   //                                             .read_address_1(main_mem_raddr_1),
+
+   //                                             .write_address(main_mem_waddr),
+   //                                             .write_data(main_mem_wdata),
+   //                                             .write_enable(main_mem_wen)
+   //                                             );
+   
+   // dual_port_main_memory #(.depth(2048)) main_mem(.read_address_0(main_mem_raddr_0),
+   //                                                .read_address_1(main_mem_raddr_1),
+
+   //                                                .read_data_0(main_mem_read_data_0),
+   //                                                .read_data_1(main_mem_read_data_1),
+
+   //                                                .write_address(main_mem_waddr),
+   //                                                .write_data(main_mem_wdata),
+   //                                                .write_enable(main_mem_wen),
+   //                                                .clk(clk));
    
    wire [31:0] write_back_register_input;
    wire [4:0] write_back_load_mem_reg;
