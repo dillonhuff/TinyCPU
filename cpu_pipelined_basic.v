@@ -171,19 +171,19 @@ module cpu_pipelined_basic(input clk,
                    .read_reg_0(read_reg_0),
                    .read_reg_1(read_reg_1));
 
-   wire [31:0] reg_file_data_0;
-   wire [31:0] reg_file_data_1;
+   // wire [31:0] reg_file_data_0;
+   // wire [31:0] reg_file_data_1;
 
-   register_file reg_file(.read_address_0(read_reg_0),
-                          .read_address_1(read_reg_1),
+   // register_file reg_file(.read_address_0(read_reg_0),
+   //                        .read_address_1(read_reg_1),
 
-                          .read_data_0(reg_file_data_0),
-                          .read_data_1(reg_file_data_1),
+   //                        .read_data_0(reg_file_data_0),
+   //                        .read_data_1(reg_file_data_1),
 
-                          .write_address(write_reg),
-                          .write_data(reg_file_write_data),
-                          .write_enable(reg_file_write_en),
-                          .clk(clk));
+   //                        .write_address(write_reg),
+   //                        .write_data(reg_file_write_data),
+   //                        .write_enable(reg_file_write_en),
+   //                        .clk(clk));
 
    wire [31:0] decode_ireg_out;
 
@@ -191,8 +191,16 @@ module cpu_pipelined_basic(input clk,
                              .clk(clk),
                              .rst(rst),
 
-                             .reg_file_data_0(reg_file_data_0),
-                             .reg_file_data_1(reg_file_data_1),
+                             .read_reg_0(read_reg_0),
+                             .read_reg_1(read_reg_1),
+
+                             .reg_file_write_data(reg_file_write_data),
+                             .reg_file_write_en(reg_file_write_en),
+
+                             .write_reg(write_reg),
+
+                             // .reg_file_data_0(reg_file_data_0),
+                             // .reg_file_data_1(reg_file_data_1),
 
                              .stall(stall),
                              .current_instruction(current_instruction),
