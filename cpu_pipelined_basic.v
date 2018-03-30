@@ -252,55 +252,6 @@ module cpu_pipelined_basic(input clk,
                      
                      .alu_result(alu_result));
    
-   // // Arithmetic logic unit
-   // wire [31:0] alu_result_reg_input;
-
-
-   // wire [31:0] alu_in0;
-   // wire [31:0] alu_in1;
-   // wire [4:0]  alu_op_select;
-
-   // alu_control alu_ctrl(.alu_operation(ireg_alu_operation),
-
-   //                      .reg_value_0(read_data_0),
-   //                      .reg_value_1(read_data_1),
-
-   //                      // Outputs sent to ALU
-   //                      .alu_in0(alu_in0),
-   //                      .alu_in1(alu_in1),
-   //                      .alu_op_select(alu_op_select)
-   //                      );
-
-   // alu ALU(.in0(alu_in0),
-   //         .in1(alu_in1),
-   //         .op_select(alu_op_select),
-   //         .out(alu_result_reg_input));
-
-   // // Execution stage result pipeline register
-   // reg_async_reset alu_result_reg(.clk(clk),
-   //                                .rst(rst),
-   //                                .en(1'b1),
-   //                                .D(alu_result_reg_input),
-   //                                .Q(alu_result));
-
-   // reg_async_reset end_execute_ireg(.clk(clk),
-   //                                  .rst(rst),
-   //                                  .en(1'b1),
-   //                                  .D(decode_ireg_out),
-   //                                  .Q(execute_ireg_out));
-
-   // reg_async_reset reg_file_data_0_e(.clk(clk),
-   //                                   .rst(rst),
-   //                                   .en(1'b1),
-   //                                   .D(read_data_0),
-   //                                   .Q(read_data_0_exe));
-
-   // reg_async_reset reg_file_data_1_e(.clk(clk),
-   //                                   .rst(rst),
-   //                                   .en(1'b1),
-   //                                   .D(read_data_1),
-   //                                   .Q(read_data_1_exe));
-   
    // STAGE MEMORY
 
    // Main memory
@@ -357,7 +308,7 @@ module cpu_pipelined_basic(input clk,
                                       .alu_result(alu_result),
                                       .exe_result(exe_result));
 
-   // Stores the result to be written back to memory   
+   // Stores the result to be written back to memory
    reg_async_reset result_storage_MEM_reg(.clk(clk),
                                           .rst(rst),
                                           .en(1'b1),
@@ -372,11 +323,11 @@ module cpu_pipelined_basic(input clk,
                                    .D(execute_ireg_out),
                                    .Q(memory_ireg_out));
 
-   assign wb_instruction_type = memory_ireg_out[31:27];
-   assign write_back_load_mem_reg = memory_ireg_out[21:17];
-   assign write_back_load_imm_reg = memory_ireg_out[10:6];
-   assign write_back_load_imm_data = {{16{1'b0}}, memory_ireg_out[26:11]};
-   
-   assign alu_op_reg_res_wb = memory_ireg_out[16:12];
+   stage_write_back write_back(.instruction_in(memory_ireg_out),
+                               .write_back_load_mem_reg(write_back_load_mem_reg),
+                               .write_back_load_imm_reg(write_back_load_imm_reg),
+                               .wb_instruction_type(wb_instruction_type),
+                               .write_back_load_imm_data(write_back_load_imm_data),
+                               .alu_op_reg_res_wb(alu_op_reg_res_wb));
    
 endmodule
