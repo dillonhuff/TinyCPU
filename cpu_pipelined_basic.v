@@ -233,90 +233,62 @@ module cpu_pipelined_basic(input clk,
    
    // STAGE MEMORY
 
-   // Main memory
-   // wire [31:0] main_mem_raddr_0;
-   // wire [31:0] main_mem_raddr_1;
-
-   // wire [31:0] main_mem_waddr;
-   // wire [31:0] main_mem_wdata;
-   // wire        main_mem_wen;
-
    wire [4:0]     ireg_out_instr_type;
    assign ireg_out_instr_type = execute_ireg_out[31:27];
 
+   wire [31:0] write_back_register_input;
+   wire [31:0] exe_result;
+   wire [31:0] memory_ireg_out;
    stage_memory memory_stage(
                              .clk(clk),
+                             .rst(rst),
                              
                              .current_instr_type(ireg_out_instr_type),
                              .PC_value(PC_output),
 
+                             .alu_result(alu_result),
                              .memory_read_address(read_data_0_exe),
 
                              .memory_write_data(read_data_0_exe),
                              .memory_write_address(read_data_1_exe),
 
                              .read_data_0(main_mem_read_data_0),
-                             .read_data_1(main_mem_read_data_1)
+                             .read_data_1(main_mem_read_data_1),
+
+                             .write_back_register_input(write_back_register_input),
+                             .exe_result(exe_result),
+
+                             .execute_ireg_out(execute_ireg_out),
+                             .memory_ireg_out(memory_ireg_out)
 
                              );
    
-   // dual_port_main_memory_control main_mem_ctrl(
-   //                                             // Inputs to select from
-   //                                             .current_instr_type(ireg_out_instr_type),
-   //                                             .PC_value(PC_output),
+   // mem_result_control mem_res_control(.instr_type(ireg_out_instr_type),
+   //                                    .read_data(main_mem_read_data_1),
+   //                                    .alu_result(alu_result),
+   //                                    .exe_result(exe_result));
 
-   //                                             .memory_read_address(read_data_0_exe),
+   // // Stores the result to be written back to memory
+   // reg_async_reset result_storage_MEM_reg(.clk(clk),
+   //                                        .rst(rst),
+   //                                        .en(1'b1),
+   //                                        .D(exe_result),
+   //                                        .Q(write_back_register_input));
 
-   //                                             .memory_write_data(read_data_0_exe),
-   //                                             .memory_write_address(read_data_1_exe),
-      
-   //                                             // Outputs to send to main_memory
-   //                                             .read_address_0(main_mem_raddr_0),
-   //                                             .read_address_1(main_mem_raddr_1),
-
-   //                                             .write_address(main_mem_waddr),
-   //                                             .write_data(main_mem_wdata),
-   //                                             .write_enable(main_mem_wen)
-   //                                             );
    
-   // dual_port_main_memory #(.depth(2048)) main_mem(.read_address_0(main_mem_raddr_0),
-   //                                                .read_address_1(main_mem_raddr_1),
+   // wire [4:0] wb_instruction_type;
+   // reg_async_reset end_memory_ireg(.clk(clk),
+   //                                 .rst(rst),
+   //                                 .en(1'b1),
+   //                                 .D(execute_ireg_out),
+   //                                 .Q(memory_ireg_out));
 
-   //                                                .read_data_0(main_mem_read_data_0),
-   //                                                .read_data_1(main_mem_read_data_1),
-
-   //                                                .write_address(main_mem_waddr),
-   //                                                .write_data(main_mem_wdata),
-   //                                                .write_enable(main_mem_wen),
-   //                                                .clk(clk));
-   
-   wire [31:0] write_back_register_input;
+   // Write back
    wire [4:0] write_back_load_mem_reg;
    wire [4:0] write_back_load_imm_reg;
    wire [31:0] write_back_load_imm_data;
+   wire [4:0]  wb_instruction_type;
    
-   wire [31:0] exe_result;
-
-   mem_result_control mem_res_control(.instr_type(ireg_out_instr_type),
-                                      .read_data(main_mem_read_data_1),
-                                      .alu_result(alu_result),
-                                      .exe_result(exe_result));
-
-   // Stores the result to be written back to memory
-   reg_async_reset result_storage_MEM_reg(.clk(clk),
-                                          .rst(rst),
-                                          .en(1'b1),
-                                          .D(exe_result),
-                                          .Q(write_back_register_input));
-
-   wire [31:0] memory_ireg_out;
-   wire [4:0] wb_instruction_type;
-   reg_async_reset end_memory_ireg(.clk(clk),
-                                   .rst(rst),
-                                   .en(1'b1),
-                                   .D(execute_ireg_out),
-                                   .Q(memory_ireg_out));
-
    stage_write_back write_back(.instruction_in(memory_ireg_out),
                                .write_back_load_mem_reg(write_back_load_mem_reg),
                                .write_back_load_imm_reg(write_back_load_imm_reg),
