@@ -4,7 +4,7 @@
 #include "verilated.h"
 #include "Vcpu_pipelined_basic.h"
 
-#define MEM cpu_pipelined_basic__DOT__main_mem__DOT__mem
+#define MEM cpu_pipelined_basic__DOT__memory_stage__DOT__main_mem__DOT__mem
 
 using namespace std;
 

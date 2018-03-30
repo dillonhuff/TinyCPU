@@ -1,5 +1,6 @@
 module stage_memory(
                     //Inputs
+                    input clk,
                     input [4:0]   current_instr_type,
                     input [31:0]  PC_value,
 
@@ -12,6 +13,7 @@ module stage_memory(
                     output [31:0] read_data_0,
                     output [31:0] read_data_1
 
+                    
                     );
 
    wire [31:0] main_mem_raddr_0;
@@ -26,10 +28,10 @@ module stage_memory(
                                                .current_instr_type(current_instr_type),
                                                .PC_value(PC_value),
 
-                                               .memory_read_address(read_data_0_exe),
+                                               .memory_read_address(memory_read_address),
 
-                                               .memory_write_data(read_data_0_exe),
-                                               .memory_write_address(read_data_1_exe),
+                                               .memory_write_data(memory_write_data),
+                                               .memory_write_address(memory_write_address),
       
                                                // Outputs to send to main_memory
                                                .read_address_0(main_mem_raddr_0),

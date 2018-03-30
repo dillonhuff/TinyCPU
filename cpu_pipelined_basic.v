@@ -245,6 +245,8 @@ module cpu_pipelined_basic(input clk,
    assign ireg_out_instr_type = execute_ireg_out[31:27];
 
    stage_memory memory_stage(
+                             .clk(clk),
+                             
                              .current_instr_type(ireg_out_instr_type),
                              .PC_value(PC_output),
 
