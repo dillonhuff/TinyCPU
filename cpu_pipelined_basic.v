@@ -36,23 +36,13 @@ module cpu_pipelined_basic(input clk,
                   );
    
 
-   // Squash logic
    wire squash_issue;
-   
-   // Stage logic
-   // Program counter
-   //wire [31:0] PC_input;
    wire [31:0] PC_output;
-
-   //wire        PC_en;
-
-   // STAGE FETCH
    stage_fetch fetch_stage(.clk(clk),
                            .rst(rst),
 
                            .current_instruction_type(current_instruction_type),
                            .stall(stall),
-                           //.alu_result(PC_increment_result),
                            .jump_condition(read_data_0),
                            .jump_address(read_data_1),
 
@@ -60,44 +50,6 @@ module cpu_pipelined_basic(input clk,
 
                            .PC_output(PC_output)
                            );
-   
-   // pipelined_pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
-   //                              .stall(stall),
-   //                              .alu_result(PC_increment_result),
-   //                              .jump_condition(read_data_0),
-   //                              .jump_address(read_data_1),
-                                
-   //                              // To PC
-   //                              .squash_issue(squash_issue),
-   //                              .pc_input(PC_input),
-   //                              .pc_en(PC_en));
-
-   // // The PC is the pipeline register for this stage   
-   // reg_async_reset #(.width(32)) PC(.clk(clk),
-   //                                  .rst(rst),
-   //                                  .en(PC_en),
-   //                                  .D(PC_input),
-   //                                  .Q(PC_output));
-
-   // STAGE DECODE
-
-   // Instruction decode
-   wire             issue_reg_en;
-   
-   pipelined_basic_issue_register_control
-     issue_reg_control(
-                       .stall(stall),
-                       .issue_reg_en(issue_reg_en));
-
-   wire [31:0]      issue_register_input;
-   assign issue_register_input = squash_issue ? 32'h0 : main_mem_read_data_0;
-   
-   reg_async_reset #(.width(32)) issue_register(.clk(clk),
-                                                .rst(rst),
-                                                .en(issue_reg_en),
-                                                //.D(main_mem_read_data_0),
-                                                .D(issue_register_input),
-                                                .Q(current_instruction));
 
    always @(posedge clk or negedge rst) begin
 
@@ -110,6 +62,22 @@ module cpu_pipelined_basic(input clk,
       $display("stall                     = %d", stall);
 
    end
+
+   // Instruction decode
+   wire             issue_reg_en;
+   
+   pipelined_basic_issue_register_control
+     issue_reg_control(
+                       .stall(stall),
+                       .issue_reg_en(issue_reg_en));
+
+   wire [31:0]      issue_register_input;
+   assign issue_register_input = squash_issue ? 32'h0 : main_mem_read_data_0;
+   reg_async_reset #(.width(32)) issue_register(.clk(clk),
+                                                .rst(rst),
+                                                .en(issue_reg_en),
+                                                .D(issue_register_input),
+                                                .Q(current_instruction));
 
    wire [31:0] current_instruction;
    wire [4:0] current_instruction_type;
