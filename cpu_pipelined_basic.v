@@ -63,7 +63,9 @@ module cpu_pipelined_basic(input clk,
 
    end
 
-   // Instruction decode
+   // STAGE Decode
+   stage_decode decode_stage();
+   
    wire             issue_reg_en;
    
    pipelined_basic_issue_register_control
@@ -131,12 +133,12 @@ module cpu_pipelined_basic(input clk,
    wire [4:0] write_reg;
 
    wire [31:0] reg_file_write_data;
-   
 
    wire [31:0]        read_data_0;
    wire [31:0]        read_data_1;
-   
+
    wire        reg_file_write_en;
+
    
    pipelined_basic_register_file_control
      reg_file_ctrl(
@@ -184,7 +186,6 @@ module cpu_pipelined_basic(input clk,
                           .write_data(reg_file_write_data),
                           .write_enable(reg_file_write_en),
                           .clk(clk));
-
 
    // Pipeline registers for the operation fetch stage
    reg_async_reset reg_file_data_0_r(.clk(clk),
@@ -262,28 +263,8 @@ module cpu_pipelined_basic(input clk,
                              .memory_ireg_out(memory_ireg_out)
 
                              );
-   
-   // mem_result_control mem_res_control(.instr_type(ireg_out_instr_type),
-   //                                    .read_data(main_mem_read_data_1),
-   //                                    .alu_result(alu_result),
-   //                                    .exe_result(exe_result));
 
-   // // Stores the result to be written back to memory
-   // reg_async_reset result_storage_MEM_reg(.clk(clk),
-   //                                        .rst(rst),
-   //                                        .en(1'b1),
-   //                                        .D(exe_result),
-   //                                        .Q(write_back_register_input));
-
-   
-   // wire [4:0] wb_instruction_type;
-   // reg_async_reset end_memory_ireg(.clk(clk),
-   //                                 .rst(rst),
-   //                                 .en(1'b1),
-   //                                 .D(execute_ireg_out),
-   //                                 .Q(memory_ireg_out));
-
-   // Write back
+   // STAGE WRITE BACK
    wire [4:0] write_back_load_mem_reg;
    wire [4:0] write_back_load_imm_reg;
    wire [31:0] write_back_load_imm_data;
