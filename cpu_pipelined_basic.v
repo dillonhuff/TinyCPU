@@ -41,11 +41,8 @@ module cpu_pipelined_basic(input clk,
    
    // Stage logic
    // Program counter
-   wire [31:0] PC_input;
+   //wire [31:0] PC_input;
    wire [31:0] PC_output;
-
-   wire [31:0] PC_increment_result;
-   assign PC_increment_result = PC_output + 32'h1;
 
    //wire        PC_en;
 
@@ -55,11 +52,13 @@ module cpu_pipelined_basic(input clk,
 
                            .current_instruction_type(current_instruction_type),
                            .stall(stall),
-                           .alu_result(PC_increment_result),
+                           //.alu_result(PC_increment_result),
                            .jump_condition(read_data_0),
                            .jump_address(read_data_1),
 
                            .squash_issue(squash_issue),
+
+                           .PC_output(PC_output)
                            );
    
    // pipelined_pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
