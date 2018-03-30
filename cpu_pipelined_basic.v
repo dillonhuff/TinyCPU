@@ -47,26 +47,38 @@ module cpu_pipelined_basic(input clk,
    wire [31:0] PC_increment_result;
    assign PC_increment_result = PC_output + 32'h1;
 
-   wire        PC_en;
+   //wire        PC_en;
 
    // STAGE FETCH
-   pipelined_pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
-                                .stall(stall),
-                                .alu_result(PC_increment_result),
-                                .jump_condition(read_data_0),
-                                .jump_address(read_data_1),
-                                
-                                // To PC
-                                .squash_issue(squash_issue),
-                                .pc_input(PC_input),
-                                .pc_en(PC_en));
+   stage_fetch fetch_stage(.clk(clk),
+                           .rst(rst),
 
-   // The PC is the pipeline register for this stage   
-   reg_async_reset #(.width(32)) PC(.clk(clk),
-                                    .rst(rst),
-                                    .en(PC_en),
-                                    .D(PC_input),
-                                    .Q(PC_output));
+                           .current_instruction_type(current_instruction_type),
+                           .stall(stall),
+                           .alu_result(PC_increment_result),
+                           .jump_condition(read_data_0),
+                           .jump_address(read_data_1),
+
+                           .squash_issue(squash_issue),
+                           );
+   
+   // pipelined_pc_control PC_ctrl(.current_instruction_type(current_instruction_type),
+   //                              .stall(stall),
+   //                              .alu_result(PC_increment_result),
+   //                              .jump_condition(read_data_0),
+   //                              .jump_address(read_data_1),
+                                
+   //                              // To PC
+   //                              .squash_issue(squash_issue),
+   //                              .pc_input(PC_input),
+   //                              .pc_en(PC_en));
+
+   // // The PC is the pipeline register for this stage   
+   // reg_async_reset #(.width(32)) PC(.clk(clk),
+   //                                  .rst(rst),
+   //                                  .en(PC_en),
+   //                                  .D(PC_input),
+   //                                  .Q(PC_output));
 
    // STAGE DECODE
 
