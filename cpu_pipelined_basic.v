@@ -35,7 +35,20 @@ module cpu_pipelined_basic(input clk,
                   .execute_stage_instruction(execute_ireg_out),
                   .memory_stage_instruction(memory_ireg_out)
                   );
-   
+
+   always @(posedge clk or negedge rst) begin
+
+      $display("Instruction being issued  = %b", issue_register.Q);
+      $display("decode_ireg_out           = %b", decode_ireg_out);
+      $display("execute_ireg_out          = %b", execute_ireg_out);
+      $display("memory_ireg_out           = %b", memory_ireg_out);
+      $display("read_data_0               = %d", read_data_0);
+      $display("read_data_1               = %d", read_data_1);
+      $display("stall                     = %d", stall);
+
+   end
+
+   // STAGE fetch   
 
    wire squash_issue;
    wire [31:0] PC_output;
@@ -52,19 +65,6 @@ module cpu_pipelined_basic(input clk,
                            .PC_output(PC_output)
                            );
 
-   always @(posedge clk or negedge rst) begin
-
-      $display("Instruction being issued  = %b", issue_register.Q);
-      $display("decode_ireg_out           = %b", decode_ireg_out);
-      $display("execute_ireg_out          = %b", execute_ireg_out);
-      $display("memory_ireg_out           = %b", memory_ireg_out);
-      $display("read_data_0               = %d", read_data_0);
-      $display("read_data_1               = %d", read_data_1);
-      $display("stall                     = %d", stall);
-
-   end
-
-   // STAGE Decode
    wire             issue_reg_en;
    
    pipelined_basic_issue_register_control
@@ -83,6 +83,7 @@ module cpu_pipelined_basic(input clk,
                                                 .Q(current_instruction));
 
 
+   // STAGE Decode
    wire [31:0]        read_data_0;
    wire [31:0]        read_data_1;
 
