@@ -110,8 +110,9 @@ void test_increment_loop(const int argc, char** argv) {
     HIGH_CLOCK(top);
 
     cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
+    cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
     cout << "-----------------------------------------------------------" << endl;
-
+    
     if (i > 0) {
       assert(top->PC_value > 0);
     }
