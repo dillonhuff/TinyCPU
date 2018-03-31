@@ -38,7 +38,7 @@ module cpu_pipelined_basic(input clk,
 
    always @(posedge clk or negedge rst) begin
 
-      $display("Instruction being issued  = %b", issue_register.Q);
+      $display("Instruction being issued  = %b", current_instruction);
       $display("decode_ireg_out           = %b", decode_ireg_out);
       $display("execute_ireg_out          = %b", execute_ireg_out);
       $display("memory_ireg_out           = %b", memory_ireg_out);
@@ -52,36 +52,29 @@ module cpu_pipelined_basic(input clk,
 
    wire squash_issue;
    wire [31:0] PC_output;
+   wire [31:0] current_instruction;
+
+   wire [31:0] jump_condition;
+   wire [31:0] jump_address;
+   
    stage_fetch fetch_stage(.clk(clk),
                            .rst(rst),
 
                            .current_instruction_type(current_instruction_type),
                            .stall(stall),
-                           .jump_condition(read_data_0),
-                           .jump_address(read_data_1),
+                           // .jump_condition(read_data_0),
+                           // .jump_address(read_data_1),
+
+                           .jump_condition(jump_condition),
+                           .jump_address(jump_address),
+
+                           .main_mem_read_data_0(main_mem_read_data_0),
 
                            .squash_issue(squash_issue),
 
-                           .PC_output(PC_output)
+                           .PC_output(PC_output),
+                           .current_instruction(current_instruction)
                            );
-
-   wire             issue_reg_en;
-   
-   pipelined_basic_issue_register_control
-     issue_reg_control(
-                       .stall(stall),
-                       .issue_reg_en(issue_reg_en));
-
-   wire [31:0]      issue_register_input;
-   assign issue_register_input = squash_issue ? 32'h0 : main_mem_read_data_0;
-
-   wire [31:0] current_instruction;
-   reg_async_reset #(.width(32)) issue_register(.clk(clk),
-                                                .rst(rst),
-                                                .en(issue_reg_en),
-                                                .D(issue_register_input),
-                                                .Q(current_instruction));
-
 
    // STAGE Decode
    wire [31:0]        read_data_0;
@@ -105,6 +98,9 @@ module cpu_pipelined_basic(input clk,
                              .write_back_register_input(write_back_register_input),
 
                              // Outputs
+                             .forwarded_jump_condition(jump_condition),
+                             .forwarded_jump_address(jump_address),
+                             
                              .read_data_0(read_data_0),
                              .read_data_1(read_data_1),
                              .decode_ireg_out(decode_ireg_out),

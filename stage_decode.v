@@ -1,13 +1,6 @@
 module stage_decode(input clk,
                     input         rst,
 
-                    // input [4:0]   read_reg_0,
-                    // input [4:0]   read_reg_1,
-
-                    //input [4:0]   write_reg,
-                    //input [31:0]  reg_file_write_data,
-                    //input         reg_file_write_en,
-
                     input [4:0]   alu_op_reg_res_wb,
 
                     input         stall,
@@ -19,17 +12,18 @@ module stage_decode(input clk,
                     input [4:0]   write_back_load_imm_reg,
                     input [31:0]  write_back_load_imm_data,
                     input [4:0]   write_back_load_mem_reg,
-                    input [31:0]   write_back_register_input,
+                    input [31:0]  write_back_register_input,
                     
                     // Outputs
+
+                    output [31:0] forwarded_jump_condition,
+                    output [31:0] forwarded_jump_address,
+
                     output [31:0] read_data_0,
                     output [31:0] read_data_1,
                     output [31:0] decode_ireg_out,
                     output [4:0]  current_instruction_type
                     );
-
-   //wire [4:0] current_instruction_type;
-
 
    /* verilator lint_off UNUSED */   
    wire [4:0] load_imm_reg;
@@ -132,6 +126,11 @@ module stage_decode(input clk,
                           .clk(clk));
    
    // Pipeline registers for the operation fetch stage
+
+   assign forwarded_jump_condition = reg_file_data_0;
+   assign forwarded_jump_address = reg_file_data_1;
+   
+   
    reg_async_reset reg_file_data_0_r(.clk(clk),
                                      .rst(rst),
                                      .en(1'b1),
