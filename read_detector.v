@@ -39,6 +39,14 @@ module read_detector(
          reads_1_i = 1;
          read_reg_1_i = instr[21:17];
          
+      end else if (instr_type == `INSTR_JUMP) begin
+
+         reads_0_i = 1;
+         read_reg_0_i = instr[26:22];
+
+         reads_1_i = 1;
+         read_reg_1_i = instr[21:17];
+         
       end else begin
          reads_0_i = 0;
          reads_1_i = 0;
