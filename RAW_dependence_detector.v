@@ -29,7 +29,9 @@ module RAW_dependence_detector(/* verilator lint_off UNUSED */
                            .write_reg(i0_write_reg));
    
 
-   assign has_RAW_dependence = i0_writes &&
+   assign has_RAW_dependence = (i0_writes && (i1 != 32'h0))
+     &&
+                               
                                (((i0_write_reg == i1_read_reg_0) && i1_reads_0) ||
                                 ((i0_write_reg == i1_read_reg_1) && i1_reads_1));
    

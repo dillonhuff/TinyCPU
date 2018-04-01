@@ -3,7 +3,9 @@
 `include "arch_defines.v"
 `endif // ARCH_DEFINES
 
-module write_detector(input [31:0] instr,
+module write_detector(
+                      /* verilator lint_off UNUSED */
+                      input [31:0] instr,
 
                       output       writes,
                       output [4:0] write_reg);
