@@ -7,7 +7,6 @@ module stage_decode(input clk,
 
                     input [31:0]  current_instruction,
 
-
                     input [4:0]   wb_instruction_type,
                     input [4:0]   write_back_load_imm_reg,
                     input [31:0]  write_back_load_imm_data,
