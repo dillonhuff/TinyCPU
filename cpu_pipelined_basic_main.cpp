@@ -101,10 +101,10 @@ void test_increment_loop(const int argc, char** argv) {
   // Cycles needed to get to MEM[1000] = K
   // Startup cycles + (N_STAGES*loop_length*K)
   int K = 3;
-  int N_STAGES = 5;
-  int startup_instructions = 5;
-  int loop_length = 8; // TODO: Set correctly
-  int n_cycles = N_STAGES*(startup_instructions + loop_length*K);
+  // int N_STAGES = 5;
+  // int startup_instructions = 5;
+  // int loop_length = 8; // TODO: Set correctly
+  int n_cycles = 80; //N_STAGES*(startup_instructions + loop_length*K);
   for (int i = 0; i < n_cycles; i++) {
 
     HIGH_CLOCK(top);
@@ -153,8 +153,7 @@ void test_load_store_program(const int argc, char** argv) {
 
   HIGH_CLOCK(top);
   
-  int n_cycles = 40;
-  // Q: How many cycles are needed to increment 2 times?
+  int n_cycles = 10;
   for (int i = 0; i < n_cycles; i++) {
 
     HIGH_CLOCK(top);
@@ -184,7 +183,7 @@ void test_multiload_store_program(const int argc, char** argv) {
 
   HIGH_CLOCK(top);
   
-  int n_cycles = 40;
+  int n_cycles = 10;
   // Q: How many cycles are needed to increment 2 times?
   for (int i = 0; i < n_cycles; i++) {
 

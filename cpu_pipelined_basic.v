@@ -24,7 +24,7 @@ module cpu_pipelined_basic(input clk,
    assign current_instruction_type_dbg = current_instruction_type;
 `endif // DEBUG_ON
 
-   // Stall logic
+   // Stall detection logic
    wire stall;
    wire [4:0] current_instruction_type;
    
@@ -49,7 +49,6 @@ module cpu_pipelined_basic(input clk,
    end
 
    // STAGE fetch   
-
    wire squash_issue;
    wire [31:0] PC_output;
    wire [31:0] current_instruction;
@@ -128,7 +127,6 @@ module cpu_pipelined_basic(input clk,
                      .alu_result(alu_result));
    
    // STAGE MEMORY
-
    wire [4:0]     ireg_out_instr_type;
    assign ireg_out_instr_type = execute_ireg_out[31:27];
 
