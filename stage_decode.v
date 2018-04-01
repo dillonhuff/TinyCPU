@@ -4,6 +4,7 @@ module stage_decode(input clk,
                     input [4:0]   alu_op_reg_res_wb,
 
                     input         stall,
+                    input         squash,
 
                     input [31:0]  current_instruction,
 
@@ -144,14 +145,17 @@ module stage_decode(input clk,
 
    wire [31:0] decode_ireg_input;
    // Next instruction is a NO-op
-   assign decode_ireg_input = stall ? 32'h0 : current_instruction;
+   assign decode_ireg_input = stall | squash ? 32'h0 : current_instruction;
 
-   wire [31:0] decode_ireg_out;
+   //wire [31:0] decode_ireg_out;
+   wire [31:0] decode_ireg_instr;
+   
    reg_async_reset end_decode_ireg(.clk(clk),
                                    .rst(rst),
                                    .en(1'b1),
                                    .D(decode_ireg_input),
-                                   .Q(decode_ireg_out));
+                                   .Q(decode_ireg_instr));
 
+   assign decode_ireg_out = squash ? 32'h0 : decode_ireg_instr;
    
 endmodule

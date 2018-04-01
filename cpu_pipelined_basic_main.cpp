@@ -111,7 +111,7 @@ void test_increment_loop(const int argc, char** argv) {
 
     cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
     cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
-    cout << "-----------------------------------------------------------" << endl;
+    cout << "---------------------------------------------------------------" << endl;
     
     if (i > 0) {
       assert(top->PC_value > 0);
@@ -159,6 +159,7 @@ void test_load_store_program(const int argc, char** argv) {
     HIGH_CLOCK(top);
 
     cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
+    cout << "---------------------------------------------------------------" << endl;
   }
 
   cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
@@ -190,6 +191,7 @@ void test_multiload_store_program(const int argc, char** argv) {
     HIGH_CLOCK(top);
 
     cout << "At " << i << " instruction type is = " << (int) top->current_instruction_type_dbg << ", PC = " << (int) top->PC_value << endl;
+    cout << "---------------------------------------------------------------" << endl;
   }
 
   cout << "top->MEM[1000] = " << ((int)top->MEM[1000]) << endl;
@@ -198,6 +200,7 @@ void test_multiload_store_program(const int argc, char** argv) {
   top->final();
 }
 
+// What is the next step? I guess doing branch prediction would be nice?
 int main(const int argc, char** argv) {
   test_multiload_store_program(argc, argv);
   test_load_store_program(argc, argv);

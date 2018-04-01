@@ -3,6 +3,14 @@
 `include "arch_defines.v"
 `endif // ARCH_DEFINES
 
+// I need pencil and paper to figure out the stall logic vs squash logic.
+
+// Stall means: Introduce a bubble in the pipeline, the output of the issue
+// register should just be a no-op while the pipeline is stalled
+
+// Squash means: Cancel an instruction that is already in progress before it
+// reaches the memory or write back stages. (Destroy contents of issue ireg,
+// decode ireg or exe ireg) (Replace existing ireg with no-op)
 module pipelined_pc_control(input [4:0] current_instruction_type,
                             input [0:0]   stall,
                             input [31:0]  alu_result,

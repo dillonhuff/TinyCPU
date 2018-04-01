@@ -45,6 +45,7 @@ module cpu_pipelined_basic(input clk,
       $display("read_data_0               = %d", read_data_0);
       $display("read_data_1               = %d", read_data_1);
       $display("stall                     = %d", stall);
+      $display("squash                    = %d", squash_issue);
 
    end
 
@@ -88,6 +89,7 @@ module cpu_pipelined_basic(input clk,
                              .alu_op_reg_res_wb(alu_op_reg_res_wb),
 
                              .stall(stall),
+                             .squash(squash_issue),
                              .current_instruction(current_instruction),
 
                              .wb_instruction_type(wb_instruction_type),
