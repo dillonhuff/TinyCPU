@@ -74,7 +74,7 @@ void load_loop_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
   top->MEM[0] = tiny_CPU_load_immediate(0, 0);
   top->MEM[1] = tiny_CPU_load_immediate(1000, 1);
   top->MEM[2] = tiny_CPU_load_immediate(0, 26); // reg26 <- 0, loop count
-  top->MEM[3] = tiny_CPU_load_immediate(100, 25); // reg25 <- 100, loop bound
+  top->MEM[3] = tiny_CPU_load_immediate(3, 25); // reg25 <- 4, loop bound
   top->MEM[4] = tiny_CPU_store(0, 1); // mem[1000] = 0
   // Enter loop
   top->MEM[5] = tiny_CPU_load(1, 2); // reg2 <- mem[1000]
@@ -85,7 +85,7 @@ void load_loop_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
   top->MEM[10] = tiny_CPU_binop(TINY_CPU_NEQ, 25, 26, 27);
   top->MEM[11] = tiny_CPU_load_immediate(5, 9); // reg9 <- 5
   top->MEM[12] = tiny_CPU_jump(27, 9); // if loop count != loop bound jump to 5
-  top->MEM[13] = tiny_CPU_store(0, 1); // Just to check if jumps are being executed
+  //top->MEM[13] = tiny_CPU_store(0, 1); // Just to check if jumps are being executed
 
 }
 
@@ -101,7 +101,7 @@ void test_increment_loop(const int argc, char** argv) {
   // Cycles needed to get to MEM[1000] = K
   // Startup cycles + (N_STAGES*loop_length*K)
   int K = 3;
-  int N_STAGES = 6;
+  int N_STAGES = 5;
   int startup_instructions = 5;
   int loop_length = 8; // TODO: Set correctly
   int n_cycles = N_STAGES*(startup_instructions + loop_length*K);
