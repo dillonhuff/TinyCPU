@@ -1,4 +1,4 @@
-module decoder(
+module basic_pipeline_decoder(
                /* verilator lint_off UNUSED */
                input [31:0]  instruction,
 
@@ -16,7 +16,6 @@ module decoder(
                
                output [4:0]  alu_op_reg_0,
                output [4:0]  alu_op_reg_1,
-               output [4:0]  alu_op_reg_res,
                output [4:0]  alu_operation,
 
                output [4:0] jump_condition_reg,
@@ -37,7 +36,6 @@ module decoder(
    
    assign alu_op_reg_0 = instruction[26:22];
    assign alu_op_reg_1 = instruction[21:17];
-   assign alu_op_reg_res = instruction[16:12];
    assign alu_operation = instruction[11:7];
 
    assign jump_condition_reg = instruction[26:22];

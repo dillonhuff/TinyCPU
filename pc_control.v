@@ -9,16 +9,16 @@ module pc_control(input [4:0] current_instruction_type,
                   input [31:0]  jump_condition,
                   input [31:0]  jump_address,
 
-                  input `STAGE_WIDTH stage,
+                  input         `STAGE_WIDTH stage,
 
 
                   // Outputs to PC input
                   output [31:0] pc_input,
-                  output         pc_en
+                  output        pc_en
                   );
    
 
-   assign pc_en = stage == `STAGE_FETCH;
+   assign pc_en = (stage == `STAGE_FETCH);
    
    reg [31:0]                   pc_input_i;
    always @(*) begin

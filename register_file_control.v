@@ -76,9 +76,9 @@ module register_file_control(//input [2:0] stage,
          write_address_i = load_mem_reg;
          read_reg_0_i = load_mem_addr_reg;
 
-         if (stage == `STAGE_REGISTER_UPDATE) begin
-            write_data_i = load_mem_data;
-         end
+         //if (stage == `STAGE_REGISTER_UPDATE) begin
+         write_data_i = load_mem_data;
+         //end
 
       end else if (is_alu_instr) begin
          assert(!is_load_imm_instr);

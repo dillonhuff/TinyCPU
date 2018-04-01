@@ -4,7 +4,7 @@
 `endif // ARCH_DEFINES
 
 module issue_register_control(
-                              input `STAGE_WIDTH stage,
+                              input  `STAGE_WIDTH stage,
 
                               // Outputs sent to issue register
                               output issue_reg_en
