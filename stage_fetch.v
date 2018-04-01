@@ -48,11 +48,15 @@ module stage_fetch(input clk,
    wire [31:0]      issue_register_input;
    assign issue_register_input = squash_issue ? 32'h0 : main_mem_read_data_0;
 
-   wire [31:0] current_instruction;
+   wire [31:0] current_instruction_out;
    reg_async_reset #(.width(32)) issue_register(.clk(clk),
                                                 .rst(rst),
                                                 .en(issue_reg_en),
                                                 .D(issue_register_input),
-                                                .Q(current_instruction));
+                                                .Q(current_instruction_out));
+
+   //assign current_instruction = squash_issue ? 32'h0 : current_instruction_out;
+   assign current_instruction = current_instruction_out;
+   
 
 endmodule
