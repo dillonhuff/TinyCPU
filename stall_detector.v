@@ -28,14 +28,32 @@ module stall_detector(output [0:0] stall,
                                   execute_is_branch ||
                                   memory_is_branch;
 
-   wire                            any_RAW_dependence;
    wire                            issued_i_reads_reg_0;
    wire                            issued_i_reads_reg_1;
    wire [4:0]                      issued_i_reg_0;
    wire [4:0]                      issued_i_reg_1;
+
+   wire                            decode_RAW_dep;
+   RAW_dependence_detector decode_detect(.i0(issue_reg_output),
+                                         .i1(decode_stage_instruction),
+                                         .has_RAW_dependence(decode_RAW_dep));
+
+   wire                            execute_RAW_dep;
+   RAW_dependence_detector execute_detect(.i0(issue_reg_output),
+                                         .i1(execute_stage_instruction),
+                                         .has_RAW_dependence(execute_RAW_dep));
+
+   wire                            memory_RAW_dep;
+   RAW_dependence_detector memory_detect(.i0(issue_reg_output),
+                                         .i1(memory_stage_instruction),
+                                         .has_RAW_dependence(memory_RAW_dep));
    
-   assign stall = any_branch_past_issue || any_RAW_dependence;
+   assign stall = any_branch_past_issue ||
+                  decode_RAW_dep ||
+                  execute_RAW_dep ||
+                  memory_RAW_dep;
    
+
    // wire any_instr_in_pipe = (32'h0 != decode_stage_instruction) ||
    //      (32'h0 != execute_stage_instruction) ||
    //      (32'h0 != memory_stage_instruction);
