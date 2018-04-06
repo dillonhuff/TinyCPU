@@ -9,7 +9,7 @@ def os_cmd(command_string):
 
 # Module by module tests
 def build_module_with_main(mod_name, main_name):
-    v_command = "verilator -Ifirst_cpu -Wall -Wno-DECLFILENAME --cc " + mod_name + ".v --exe " + main_name + " --top-module " + mod_name + " -CFLAGS -O3 -CFLAGS -march=native -DDEBUG_ON"
+    v_command = "verilator -Ifirst_cpu -Icommon -Wall -Wno-DECLFILENAME --cc " + mod_name + ".v --exe " + main_name + " --top-module " + mod_name + " -CFLAGS -O3 -CFLAGS -march=native -DDEBUG_ON"
     verilate = os.system(v_command);
 
     if (verilate != 0):
