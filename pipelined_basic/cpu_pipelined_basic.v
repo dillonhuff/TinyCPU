@@ -49,6 +49,19 @@ module cpu_pipelined_basic(input clk,
 
    end
 
+   // Q: What to do next?
+   // 1. More realistic memories / caching
+   // 2. Branch prediction
+   // 3. Virtual memory?
+
+   // Q: How to model long latency memory in verilog?
+   // 1. I suppose I could just have a large shift register between the array
+   //    and the memory module output
+
+   // 2. Or just have a ready bit sitting there that the processor has to wait for?
+   //    Problem: The processor does not have to wait for it. It could just ignore
+   //    the bit if it knows that data is ready.
+
    // STAGE fetch   
    wire squash_issue;
    wire [31:0] PC_output;
@@ -62,8 +75,6 @@ module cpu_pipelined_basic(input clk,
 
                            .current_instruction_type(current_instruction_type),
                            .stall(stall),
-                           // .jump_condition(read_data_0),
-                           // .jump_address(read_data_1),
 
                            .jump_condition(jump_condition),
                            .jump_address(jump_address),
