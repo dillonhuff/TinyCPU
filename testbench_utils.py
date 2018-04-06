@@ -8,8 +8,9 @@ def os_cmd(command_string):
         assert(False)
 
 # Module by module tests
-def build_module_with_main(mod_name, main_name):
-    v_command = "verilator -Ifirst_cpu -Icommon -Ipipelined_basic -Wall -Wno-DECLFILENAME --cc " + mod_name + ".v --exe " + main_name + " --top-module " + mod_name + " -CFLAGS -O3 -CFLAGS -march=native -DDEBUG_ON"
+def build_module_with_main(mod_name, main_name, flags):
+    #v_command = "verilator -Ifirst_cpu -Icommon -Ipipelined_basic -Wall -Wno-DECLFILENAME --cc " + mod_name + ".v --exe " + main_name + " --top-module " + mod_name + " -CFLAGS -O3 -CFLAGS -march=native -DDEBUG_ON"
+    v_command = "verilator " + flags + " -Wall -Wno-DECLFILENAME --cc " + mod_name + ".v --exe " + main_name + " --top-module " + mod_name + " -CFLAGS -O3 -CFLAGS -march=native -DDEBUG_ON"
     verilate = os.system(v_command);
 
     if (verilate != 0):
@@ -30,5 +31,5 @@ def build_module_with_main(mod_name, main_name):
         print 'ERROR: ' + mod_name + ' tests failed'
         assert(False)
     
-def build_module(mod_name):
-    build_module_with_main(mod_name, mod_name + '_main.cpp')
+def build_module(mod_name, flags=''):
+    build_module_with_main(mod_name, mod_name + '_main.cpp', flags)
