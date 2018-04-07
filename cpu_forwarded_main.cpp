@@ -2,13 +2,13 @@
 
 #include "verilator_common.h"
 #include "verilated.h"
-#include "Vcpu_pipelined_basic.h"
+#include "Vcpu_forwarded.h"
 
-#define MEM cpu_pipelined_basic__DOT__memory_stage__DOT__main_mem__DOT__mem
+#define MEM cpu_forwarded__DOT__memory_stage__DOT__main_mem__DOT__mem
 
 using namespace std;
 
-void load_neq_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
+void load_neq_program(const int mem_depth, Vcpu_forwarded* const top) {
   // Set all memory to be no-ops
   for (int i = 0; i < mem_depth; i++) {
     uint32_t no_op = tiny_CPU_no_op();
@@ -26,7 +26,7 @@ void load_neq_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
 }
 
 void test_neq_alu(const int argc, char** argv) {
-  Vcpu_pipelined_basic* top = new Vcpu_pipelined_basic();
+  Vcpu_forwarded* top = new Vcpu_forwarded();
 
   load_neq_program(2048, top);
 
@@ -49,7 +49,7 @@ void test_neq_alu(const int argc, char** argv) {
 
 }
 
-void load_multiload_store_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
+void load_multiload_store_program(const int mem_depth, Vcpu_forwarded* const top) {
   // Set all memory to be no-ops
   for (int i = 0; i < mem_depth; i++) {
     uint32_t no_op = tiny_CPU_no_op();
@@ -64,7 +64,7 @@ void load_multiload_store_program(const int mem_depth, Vcpu_pipelined_basic* con
   top->MEM[5] = tiny_CPU_load(1, 2); // reg2 <- mem[1000]
 }
 
-void load_loop_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
+void load_loop_program(const int mem_depth, Vcpu_forwarded* const top) {
   // Set all memory to be no-ops
   for (int i = 0; i < mem_depth; i++) {
     uint32_t no_op = tiny_CPU_no_op();
@@ -90,7 +90,7 @@ void load_loop_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
 }
 
 void test_increment_loop(const int argc, char** argv) {
-  Vcpu_pipelined_basic* top = new Vcpu_pipelined_basic();
+  Vcpu_forwarded* top = new Vcpu_forwarded();
 
   load_loop_program(2048, top);
 
@@ -124,7 +124,7 @@ void test_increment_loop(const int argc, char** argv) {
   top->final();
 }
 
-void load_load_store_program(const int mem_depth, Vcpu_pipelined_basic* const top) {
+void load_load_store_program(const int mem_depth, Vcpu_forwarded* const top) {
 
   // Set all memory to be no-ops
   for (int i = 0; i < mem_depth; i++) {
@@ -140,7 +140,7 @@ void load_load_store_program(const int mem_depth, Vcpu_pipelined_basic* const to
 void test_load_store_program(const int argc, char** argv) {
   cout << "Testing load immediate then storing it back" << endl;
 
-  Vcpu_pipelined_basic* top = new Vcpu_pipelined_basic();
+  Vcpu_forwarded* top = new Vcpu_forwarded();
 
   load_load_store_program(2048, top);
 
@@ -171,7 +171,7 @@ void test_load_store_program(const int argc, char** argv) {
 void test_multiload_store_program(const int argc, char** argv) {
   cout << "Testing multiple loads then store back, then load" << endl;
 
-  Vcpu_pipelined_basic* top = new Vcpu_pipelined_basic();
+  Vcpu_forwarded* top = new Vcpu_forwarded();
 
   load_multiload_store_program(2048, top);
 
@@ -207,5 +207,5 @@ int main(const int argc, char** argv) {
   test_neq_alu(argc, argv);
   test_increment_loop(argc, argv);
 
-  cout << "$$$$ CPU Pipelined Basic tests passed" << endl;
+  cout << "$$$$ CPU Forwarded tests passed" << endl;
 }
