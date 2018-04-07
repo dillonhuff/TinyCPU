@@ -49,18 +49,15 @@ module cpu_forwarded(input clk,
 
    end
 
-   // Q: What to do next?
-   // 1. More realistic memories / caching
-   // 2. Branch prediction
-   // 3. Virtual memory?
 
-   // Q: How to model long latency memory in verilog?
-   // 1. I suppose I could just have a large shift register between the array
-   //    and the memory module output
+   // Implementing operand forwarding
+   // How to do forwarding?
+   // I guess I need feedback from the output of the ALU to the inputs to
+   // the decode stage pipeline registers? that way if a RAW dependence is
+   // detected between the current decode stage instr and the current exe
+   // stage instr I can detect it and forward the correct result to the
+   // the register file outputs
 
-   // 2. Or just have a ready bit sitting there that the processor has to wait for?
-   //    Problem: The processor does not have to wait for it. It could just ignore
-   //    the bit if it knows that data is ready.
 
    // STAGE fetch   
    wire squash_issue;

@@ -130,17 +130,25 @@ module stage_decode(input clk,
    assign forwarded_jump_condition = reg_file_data_0;
    assign forwarded_jump_address = reg_file_data_1;
    
+
+   wire [31:0]        operand_0_value;
+   wire [31:0]        operand_1_value;
+
+   assign operand_0_value = reg_file_data_0;
+   assign operand_1_value = reg_file_data_1;
    
    reg_async_reset reg_file_data_0_r(.clk(clk),
                                      .rst(rst),
                                      .en(1'b1),
-                                     .D(reg_file_data_0),
+                                     //.D(reg_file_data_0),
+                                     .D(operand_0_value),
                                      .Q(read_data_0));
 
    reg_async_reset reg_file_data_1_r(.clk(clk),
                                      .rst(rst),
                                      .en(1'b1),
-                                     .D(reg_file_data_1),
+                                     //.D(reg_file_data_1),
+                                     .D(operand_1_value),
                                      .Q(read_data_1));
 
    wire [31:0] decode_ireg_input;
