@@ -200,8 +200,13 @@ void test_multiload_store_program(const int argc, char** argv) {
   top->final();
 }
 
+void test_forward_jump(const int argc, char** argv) {
+  
+}
+
 // What is the next step? I guess doing branch prediction would be nice?
 int main(const int argc, char** argv) {
+  test_forward_jump(argc, argv);
   test_multiload_store_program(argc, argv);
   test_load_store_program(argc, argv);
   test_neq_alu(argc, argv);

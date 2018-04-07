@@ -53,11 +53,4 @@ module stall_detector(output [0:0] stall,
                   execute_RAW_dep ||
                   memory_RAW_dep;
    
-
-   // wire any_instr_in_pipe = (32'h0 != decode_stage_instruction) ||
-   //      (32'h0 != execute_stage_instruction) ||
-   //      (32'h0 != memory_stage_instruction);
-
-   // assign stall = any_instr_in_pipe;
-
 endmodule
