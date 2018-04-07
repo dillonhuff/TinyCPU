@@ -106,6 +106,8 @@ module cpu_forwarded(input clk,
                              .write_back_load_mem_reg(write_back_load_mem_reg),
                              .write_back_register_input(write_back_register_input),
 
+                             .forwarded_alu_result(forwarded_alu_result),
+
                              // Outputs
                              .forwarded_jump_condition(jump_condition),
                              .forwarded_jump_address(jump_address),
@@ -121,7 +123,9 @@ module cpu_forwarded(input clk,
 
    wire [31:0] read_data_0_exe;
    wire [31:0] read_data_1_exe;
-   
+
+   wire [31:0] forwarded_alu_result;
+
    stage_exe execute(.clk(clk),
                      .rst(rst),
 
@@ -134,7 +138,9 @@ module cpu_forwarded(input clk,
                      .register_a_value_exe_out(read_data_0_exe),
                      .register_b_value_exe_out(read_data_1_exe),
                      
-                     .alu_result(alu_result));
+                     .alu_result(alu_result),
+
+                     .forwarded_alu_result(forwarded_alu_result));
    
    // STAGE MEMORY
    wire [4:0]     ireg_out_instr_type;

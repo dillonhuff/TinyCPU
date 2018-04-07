@@ -1,14 +1,19 @@
 module stage_exe(input clk,
-                 input        rst,
-                 input [31:0] instruction_in,
-                 input [31:0] register_a_value,
-                 input [31:0] register_b_value,
+                 input         rst,
+                 input [31:0]  instruction_in,
+                 input [31:0]  register_a_value,
+                 input [31:0]  register_b_value,
 
+                 // Outputs
                  output [31:0] instruction_out,
                  output [31:0] alu_result,
 
                  output [31:0] register_a_value_exe_out,
-                 output [31:0] register_b_value_exe_out);
+                 output [31:0] register_b_value_exe_out,
+                 // Forwarded result
+                 output [31:0] forwarded_alu_result
+                 );
+   
 
    wire [31:0] alu_result_reg_input;
 
@@ -35,6 +40,8 @@ module stage_exe(input clk,
            .in1(alu_in1),
            .op_select(alu_op_select),
            .out(alu_result_reg_input));
+
+   assign forwarded_alu_result = alu_result_reg_input;
 
    // Execution stage result pipeline register
    reg_async_reset alu_result_reg(.clk(clk),
