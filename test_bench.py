@@ -1,5 +1,6 @@
 from testbench_utils import build_module
 
+build_module('cpu_forwarded', '-Icommon -Icpu_forwarded')
 build_module('cpu_pipelined_basic', '-Icommon -Ipipelined_basic')
 build_module('alu', '-Icommon')
 build_module('register_file', '-Icommon')
