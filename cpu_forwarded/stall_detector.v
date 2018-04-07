@@ -49,9 +49,9 @@ module stall_detector(output [0:0] stall,
                                          .has_RAW_dependence(memory_RAW_dep));
    
    assign stall = any_branch_past_issue;
-// ||
-                  // decode_RAW_dep ||
-                  // execute_RAW_dep ||
-                  // memory_RAW_dep;
+   // ||
+   // decode_RAW_dep ||
+   // execute_RAW_dep ||
+   // memory_RAW_dep;
    
 endmodule

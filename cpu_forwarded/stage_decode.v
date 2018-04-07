@@ -165,6 +165,14 @@ module stage_decode(input clk,
                                   .writes(exe_instr_writes),
                                   .write_reg(exe_instr_result_reg));
 
+   always @(posedge clk) begin
+
+      $display("operand 0 written by exe = %d", operand_0_written_by_exe);
+      $display("operand 1 written by exe = %d", operand_1_written_by_exe);
+      $display("forwarded alu result     = %d", forwarded_alu_result);
+      
+   end
+
    assign operand_0_written_by_exe = exe_instr_writes && (exe_instr_result_reg == read_reg_0);
    assign operand_1_written_by_exe = exe_instr_writes && (exe_instr_result_reg == read_reg_1);
    

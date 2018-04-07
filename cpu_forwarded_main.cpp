@@ -232,6 +232,8 @@ void test_forwarded_arith(const int argc, char** argv) {
   HIGH_CLOCK(top);
   HIGH_CLOCK(top);
   HIGH_CLOCK(top);
+  HIGH_CLOCK(top);
+  HIGH_CLOCK(top);
 
   cout << "top->MEM[123] = " << ((int)top->MEM[1000]) << endl;
   assert(top->MEM[123] == ((8 + 1000) + 1000));
