@@ -200,8 +200,48 @@ void test_multiload_store_program(const int argc, char** argv) {
   top->final();
 }
 
+void load_forwarded_arith_program(const int mem_depth, Vcpu_forwarded* const top) {
+
+  // Set all memory to be no-ops
+  for (int i = 0; i < mem_depth; i++) {
+    uint32_t no_op = tiny_CPU_no_op();
+    top->MEM[i] = no_op;
+  }
+
+  top->MEM[0] = tiny_CPU_load_immediate(8, 0);               // r0 <- 8
+  top->MEM[1] = tiny_CPU_load_immediate(1000, 1);            // r1 <- 1000
+  top->MEM[2] = tiny_CPU_binop(TINY_CPU_ADD, 0, 1, 2);       // r2 <- r0 + r1
+  top->MEM[3] = tiny_CPU_binop(TINY_CPU_MUL, 1, 2, 3);       // r3 <- r1 + r2
+  top->MEM[4] = tiny_CPU_load_immediate(123, 1);             // r1 <- 123
+  top->MEM[5] = tiny_CPU_store(0, 1);                        // mem[123] = 5
+}
+
+void test_forwarded_arith(const int argc, char** argv) {
+  cout << "Testing arithmetic result forwarding" << endl;
+
+  Vcpu_forwarded* top = new Vcpu_forwarded();
+
+  load_forwarded_arith_program(2048, top);
+
+  RESET(top);
+  HIGH_CLOCK(top);
+  HIGH_CLOCK(top);
+  HIGH_CLOCK(top);
+  HIGH_CLOCK(top);
+  HIGH_CLOCK(top);
+  HIGH_CLOCK(top);
+  HIGH_CLOCK(top);
+
+  cout << "top->MEM[123] = " << ((int)top->MEM[1000]) << endl;
+  assert(top->MEM[123] == ((8 + 1000) + 1000));
+
+  top->final();
+  
+}
+
 // What is the next step? I guess doing branch prediction would be nice?
 int main(const int argc, char** argv) {
+  test_forwarded_arith(argc, argv);
   test_multiload_store_program(argc, argv);
   test_load_store_program(argc, argv);
   test_neq_alu(argc, argv);
