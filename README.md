@@ -10,11 +10,11 @@ called TinyISA.
 # Instructions
 
 * no_op
-* load_immediate \<IMM\>, \<REG\>
-* load_memory \<MEM LOC REG\>, \<DEST REG\>
-* store \<DATA REG\>, \<MEM LOC REG\>
-* jump \<CONDITION REG\>, \<VALUE REG\>
-* \<ALU OP\> \<OP 0 REG\>, \<OP 1 REG\>, \<DEST REG\>
+* load_immediate \<IMM\> \<REG\>
+* load_memory \<MEM LOC REG\> \<DEST REG\>
+* store \<DATA REG\> \<MEM LOC REG\>
+* jump \<CONDITION REG\> \<VALUE REG\>
+* alu_op \<OPCODE\> \<OP 0 REG\> \<OP 1 REG\> \<DEST REG\>
 
 # Instruction formats:
 
