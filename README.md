@@ -3,9 +3,9 @@
 This repo contains verilog CPU implementations for a very small instruction set
 called TinyISA.
 
-[first_cpu](/first_cpu) contains a multi-cycle TinyISA CPU
-[pipelined_basic](/pipelined_basic) contains a pipelined TinyISA CPU
-[cpu_forwarded](/cpu_forwarded) contains a pipelined TinyISA CPU with forwarding.
+* [first_cpu](/first_cpu) contains a multi-cycle TinyISA CPU
+* [pipelined_basic](/pipelined_basic) contains a pipelined TinyISA CPU
+* [cpu_forwarded](/cpu_forwarded) contains a pipelined TinyISA CPU with forwarding.
 
 # Instructions
 
