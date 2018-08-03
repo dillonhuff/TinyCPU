@@ -49,7 +49,7 @@ ALU op: op code 5
 [16:12] --> result reg ID
 [11:7]  --> ALU operation
 
-# ALU codes
+# ALU opcodes
 | Operation | Opcode |
 | --------- | ------ |
 | or | 0 |
@@ -60,15 +60,4 @@ ALU op: op code 5
 | mul | 5 |
 | neq | 6 |
 | logical not | 7 |
-
-// * 0 -> or
-// * 1 -> and
-// * 2 -> xor
-// * 3 -> add
-// * 4 -> sub
-// * 5 -> mul
-// * 6 -> neq
-// * 7 -> logical not
-
-
 
