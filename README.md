@@ -1,6 +1,7 @@
 # TinyCPU
 
-This repo contains verilog CPU implementations for a very small instruction set.
+This repo contains verilog CPU implementations for a very small instruction set
+called TinyISA.
 
 [first_cpu](/first_cpu) contains a multi-cycle TinyISA CPU
 [pipelined_basic](/pipelined_basic) contains a pipelined TinyISA CPU
@@ -10,10 +11,10 @@ This repo contains verilog CPU implementations for a very small instruction set.
 
 * no_op
 * load_immediate \<IMM\>, \<REG\>
-* load_memory <MEM LOC REG>, <DEST REG>
-* store <DATA REG>, <MEM LOC REG>
-* jump <CONDITION REG>, <VALUE REG>
-* <ALU OP> <OP 0 REG>, <OP 1 REG>, <DEST REG>
+* load_memory \<MEM LOC REG\>, \<DEST REG\>
+* store \<DATA REG\>, \<MEM LOC REG\>
+* jump \<CONDITION REG\>, \<VALUE REG\>
+* \<ALU OP\> \<OP 0 REG\>, \<OP 1 REG\>, \<DEST REG\>
 
 # Instruction formats:
 
