@@ -50,14 +50,14 @@ ALU op: op code 5
 [11:7]  --> ALU operation
 
 ALU codes:
-0 -> or
-1 -> and
-2 -> xor
-3 -> add
-4 -> sub
-5 -> mul
-6 -> neq
-7 -> logical not
+* 0 -> or
+* 1 -> and
+* 2 -> xor
+* 3 -> add
+* 4 -> sub
+* 5 -> mul
+* 6 -> neq
+* 7 -> logical not
 
 
 
