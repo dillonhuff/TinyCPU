@@ -216,6 +216,23 @@ void load_forwarded_arith_program(const int mem_depth, Vcpu_forwarded* const top
   top->MEM[5] = tiny_CPU_store(0, 1);                        // mem[123] = 5
 }
 
+// Instr pairs:
+// binop binop
+// loadimm binop
+// binop loadimm
+// store binop
+// store loadimm
+// store jump
+
+
+// Note: If loading an immediate there is no RAW dependence
+// between load_imm and arithmetic because the load will be resolved when
+// decoding the load_imm
+
+// Q: Is there a way to have processor designs expressed as loads and stores,
+// in a sequential programming model and then have the design compiled down to
+// circuits that preserve the sequential programming model?
+
 void test_forwarded_arith(const int argc, char** argv) {
   cout << "Testing arithmetic result forwarding" << endl;
 

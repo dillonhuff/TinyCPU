@@ -49,3 +49,4 @@ ALU codes:
 5 -> mul
 6 -> neq
 7 -> logical not
+
