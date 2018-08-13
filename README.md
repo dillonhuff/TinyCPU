@@ -49,7 +49,7 @@ ALU op: op code 5
 [16:12] --> result reg ID
 [11:7]  --> ALU operation
 
-![alt text](./images/TinyCPU_noop.png)
+![alt text](./images/TinyCPU_ISA.png)
 
 # ALU opcodes
 | Operation | Opcode |
