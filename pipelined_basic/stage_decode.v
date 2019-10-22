@@ -73,8 +73,8 @@ module stage_decode(input clk,
 
    wire [31:0] reg_file_write_data;
 
-   wire [31:0]        read_data_0;
-   wire [31:0]        read_data_1;
+//   wire [31:0]        read_data_0;
+//   wire [31:0]        read_data_1;
 
    wire        reg_file_write_en;
 
