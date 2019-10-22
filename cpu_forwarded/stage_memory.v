@@ -62,9 +62,6 @@ module stage_memory(
                                                   .write_enable(main_mem_wen),
                                                   .clk(clk));
 
-//   wire [31:0] write_back_register_input;
-//   wire [31:0] exe_result;
-
    mem_result_control mem_res_control(.instr_type(current_instr_type),
                                       .read_data(read_data_1),
                                       .alu_result(alu_result),
